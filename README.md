@@ -10,16 +10,34 @@ or the networks related to biology.
 This document (*and this code*) aims to answer the following question : **What are the parameters favouring the preferential attachment among jazz
 musicians within a collaborative network ?**
 
+## Requirements
+`pip install networkx`
+`pip install requests`
+`pip install panda`
+`pip install csv`
+`pip install re`
+`pip install unidecode`
+`pip install BeautifulSoup`
+`pip install scipy`
+`pip install numpy`
+`pip install itertools`
+`pip install matplotlib`
+`pip install powerlaw`
+`pip install dynetx`
+`pip install csv`
+`pip install video`
+
+
 ## Screenshot
 
 ![alt text](https://raw.githubusercontent.com/jbaudru/MasterThesis-JazzNetwork/main/data/pictures/community.png)
 
 ![alt text](https://raw.githubusercontent.com/jbaudru/MasterThesis-JazzNetwork/main/data/pictures/community1.png)
 
-## Requirements
-`pip install networkx`
 
 ## To Do
 
  - Refactor : move some main function to network class, create utility class
+ - Refactor : create class for video and dynamic networkx
+ - Delete : gender guesser et ethnicolr
  - Create network for instrument (size of node depend of # musician)
