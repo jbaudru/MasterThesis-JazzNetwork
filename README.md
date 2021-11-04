@@ -22,8 +22,7 @@ musicians within a collaborative network ?**
 
 
 ## To Do
-
- - Refactor : move some main function to network class, create utility class
- - Refactor : create class for video and dynamic networkx
- - Delete : gender guesser et ethnicolr
- - Create network for instrument (size of node depend of # musician)
+- [ ] Refactor : move some main function to network class, create utility class
+- [ ] Refactor : create class for video and dynamic networkx
+- [ ] Delete : gender guesser et ethnicolr
+- [ ] Create network for instrument (size of node depend of # musician)
