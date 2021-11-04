@@ -14,6 +14,11 @@ musicians within a collaborative network ?**
 
 ![alt text](https://raw.githubusercontent.com/jbaudru/MasterThesis-JazzNetwork/main/data/pictures/community.png)
 
+![alt text](https://raw.githubusercontent.com/jbaudru/MasterThesis-JazzNetwork/main/data/pictures/community1.png)
+
+## Requirements
+`pip install networkx`
+
 ## To Do
 
  - Refactor : move some main function to network class, create utility class
