@@ -95,6 +95,7 @@ class Network:
                 color_map.append('grey')
         return color_map
 
+    ## TODO : move to utility class
 
     # Create a database with all the informations on a musician
     def create_csv_musician(self):
@@ -142,6 +143,7 @@ class Network:
                 spamWriter.writerow(line_in_csv)
                 lst_mus.append(musician)
 
+    ## TODO : move to 'gui'
 
     def printInfoDyna(self, time):
         lst_year = list(time.values())
@@ -153,7 +155,7 @@ class Network:
 
         # AUTRES PARAMETRES
 
-
+    ## TODO : move to 'gui'
 
     def printInfo(self, num_of_node_to_prt = 10, in_q1_q2 = False, neighbors = False):
         occ, deg, nb_musician = self.computeoccudeg()
@@ -197,6 +199,7 @@ class Network:
         print("Gamma value : ", res.alpha)
         return res.alpha
 
+    ## TODO : move to 'gui'
 
     # RESULTAT ETRANGE -> A REVOIR
     def show_distrib_pk(self):
@@ -244,6 +247,7 @@ class Network:
         avg_gamma = avg_gamma/len(dict_deg_gamma)
         print("Average value of gamma : ", avg_gamma)
 
+    ## TODO : move to 'gui'
 
     def show_rich_club_distrib(self):
         rc = nx.rich_club_coefficient(self.G, normalized=True, Q=100)
@@ -264,6 +268,7 @@ class Network:
         plt.ylabel('Rich-club coefficient', fontsize=12)
         plt.show()
 
+    ## TODO : move to 'gui'
 
     def show_occurence(self):
         occ, deg, nb_musician = self.computeoccudeg()
@@ -276,6 +281,7 @@ class Network:
         plt.show()
 
 
+    ## TODO : move to 'gui'
     # Function from https://stackoverflow.com/questions/64485434/how-to-plot-the-distribution-of-a-graphs-clustering-coefficient
     def show_clustering(self):
         gc = self.G.subgraph(max(nx.connected_components(self.G)))
@@ -293,7 +299,7 @@ class Network:
         plt.tight_layout()
         plt.show()
 
-
+    ## TODO : move to 'gui'
     # TODO : General, dessiner uniquement un seul des deux liens, éviter les doublons !
     def show_community(self, simple_view = False):
         G_mul = nx.MultiDiGraph()
@@ -301,7 +307,7 @@ class Network:
         d = dict(self.G.degree)
         fig, ax = plt.subplots(figsize=(10, 6),  dpi=600)
         edges = self.G.edges()
-        weights = [math.sqrt(self.G[u][v]['weight'])/2 for u,v in edges]
+        weights = [math.sqrt(self.G[u][v]['weight'])/4 for u,v in edges]
         partition = community_louvain.best_partition(self.G)
 
         pos = nx.spring_layout(self.G, k=0.7, iterations=320) #k=5/math.sqrt(self.G.order())
@@ -327,15 +333,15 @@ class Network:
             #nx.draw_networkx_labels(G_mul, pos=pos, font_size=2.5, font_color='white')
 
             #Idem que les trois ligne au dessus mais sans les edges en trans et sans bug de edges
-            nx.draw_networkx(G_mul, pos=pos, node_size=[v * 5 for v in d.values()], cmap=cmap, node_color=list(partition.values()) , edge_cmap=edgemap, edge_color=cedges, width=weights, connectionstyle=f'arc3,rad=0.2', style='solid', arrowstyle='-', with_labels=True, font_size = 0.5, font_family='Arial Nova', font_color = "white")
+            nx.draw_networkx(G_mul, pos=pos, node_size=[v * 0.2 for v in d.values()], cmap=cmap, node_color=list(partition.values()) , edge_cmap=edgemap, edge_color=cedges, width=weights, connectionstyle=f'arc3,rad=0.2', style='solid', arrowstyle='-', with_labels=True, font_size = 0.2, font_family='Arial Nova', font_color = "white")
             # linewidths=0.2, edgecolors='black'
 
         ax.axis('off')
         fig.set_facecolor('black')
-        plt.savefig("community.png")
+        plt.savefig("../data/graph_new/community.png")
         plt.show()
 
-
+    ## TODO : move to 'video'
     def show_dynamic_network(self, time, draw = False):
         V = vid.Video()
         folder = "../data/tmp_vid/"
@@ -405,6 +411,7 @@ class Network:
             V.create_video_from_imgs(folder, "test")
 
 
+    ## TODO : move to 'gui'
     def show_network(self, make_circular = False, draw_sex_color = False):
         col = self.get_sex()
         d = dict(self.G.degree)

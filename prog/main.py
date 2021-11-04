@@ -62,8 +62,19 @@ def main():
     #lst_data_set = ["../data/data.csv", "../data/data2.csv","../data/data3.csv","../data/data4.csv", "../data/data5.csv", "../data/data6.csv", "../data/data7.csv"]
     #lst_data_set = ["../data/rap_belge.csv"]
     #lst_data_set = ["../data/ex.csv"]
-    lst_data_set = ["../data/data7c.csv"]
-
+    #lst_data_set = ["../data/data7c.csv"]
+    lst_data_set = ["../data/data7c.csv",
+                    "../data/data8c.csv",
+                    "../data/data9c.csv",
+                    "../data/data10c.csv",
+                    "../data/data11c.csv",
+                    "../data/data12c.csv",
+                    "../data/data13c.csv",
+                    "../data/data14c.csv",
+                    "../data/data15c.csv",
+                    "../data/data16c.csv",
+                    "../data/data17c.csv",
+                    ]
     """
     lst_data_set = ["../data/data7.csv",
                     "../data/data8.csv",
@@ -175,13 +186,14 @@ def main():
 
     print('2 - Instrument network.')
 
-    # Afficher le réseau d'instruments
+    # TODO : Afficher le réseau d'instruments
+    """
     G2 = n.Network()
     create_node(dic_instru_mus, G2)
     pds2 = comput_weight(dic_instru_mus, G2)
     create_edge(dic_instru_mus, pds2, G2)
     G2.show_network(False, False)
-
+    """
     #print('2.2 - Creating musicians data sets.')
     #G.create_csv_musician()
 
@@ -193,9 +205,9 @@ def main():
     #create_dynamic_edge(dic_mus_collab, G, dic_mus_year_collab)
 
     print('4 - Drawing.')
-    G.show_network(False, False)
+    #G.show_network(False, False)
 
-    #G.show_community(True) # ouvrir le fichier, pas juste previsu
+    G.show_community(False) # ouvrir le fichier, pas juste previsu
     #G.show_occurence()
     #G.show_clustering()
     #G.get_gamma_value()
@@ -243,6 +255,8 @@ def merge_datasets(lst_data_set):
 #================================================================================
 ## TODO Move to network class
 
+## TODO : must be OPTIMIZE
+
 # Create all the node
 def create_node(dic_alb_musician, G):
     dic_instru_mus = {}
@@ -289,6 +303,8 @@ def create_node(dic_alb_musician, G):
                 G.addnode(musician_name)
     return dic_instru_mus
 
+## TODO : must be OPTIMIZE
+
 # Build edges between nodes
 def create_edge(dic_alb_musician, dict_pds, G):
     for k in dic_alb_musician:
@@ -311,6 +327,7 @@ def create_edge(dic_alb_musician, dict_pds, G):
                                         musician2_name = musician2
                                     G.addedgeweight(musician_name, musician2_name, dict_pds[musician][musician2])
 
+## TODO : must be OPTIMIZE
 
 def create_dynamic_edge(dic_alb_musician, G, dic_mus_year_collab):
     for k in dic_alb_musician:
@@ -325,6 +342,7 @@ def create_dynamic_edge(dic_alb_musician, G, dic_mus_year_collab):
                                     if(musician2 != "" and musician2 != " " and len(musician2) > 2):
                                         G.adddynedge(musician, musician2, time)
 
+## TODO : must be OPTIMIZE
 
 # Compute weight of edge between musician
 def comput_weight(dict_alb_musician, G):

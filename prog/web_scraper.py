@@ -36,11 +36,11 @@ def main():
     """
 
 
-    num = 7
-    for i in range(600, 10000, 300): #37000 upper bound
+    num = 13
+    for i in range(2200, 10000, 200): #37000 upper bound
         filename = "data" + str(num) + "c.csv"
         print("\nBuilding ", filename)
-        web_scrapping_jazz_montreux("https://database.montreuxjazz.com/", i, i + 300, filename, filter)
+        web_scrapping_jazz_montreux("https://database.montreuxjazz.com/", i, i + 200, filename, filter)
         num += 1
 
 
