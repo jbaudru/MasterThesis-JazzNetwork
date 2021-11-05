@@ -11,7 +11,7 @@ This document (*and this code*) aims to answer the following question : **What a
 musicians within a collaborative network ?**
 
 ## Requirements
-`pip install networkx requests panda csv re unidecode BeautifulSoup scipy numpy itertools matplotlib powerlaw dynetx csv cv2 glob`
+`pip install networkx requests panda csv re unidecode BeautifulSoup scipy numpy itertools matplotlib powerlaw dynetx csv cv2 glob nltk`
 
 
 ## Screenshot
