@@ -86,13 +86,12 @@ def main():
     dic_instru_mus = create_edge(dic_mus_collab, pds, G, True)
     
     print("test instru réseau")
-    H = n.Network()
+    H = n.Network(True)
     create_node(dic_instru_mus, H)
     pds2 = comput_weight_instru(dic_instru_mus, H)
-    print(pds2)
+    
     create_edge_instru(dic_instru_mus, pds2, H)
-    H.printInfo(5)
-    H.show_network(False, True)
+    H.show_network(True, True)
     #print('3.2 - Building dynamic edges.')
     #create_dynamic_edge(dic_mus_collab, G, dic_mus_year_collab)
 
@@ -108,7 +107,7 @@ def main():
     #G.show_dynamic_network(dic_mus_year_collab, False)
 
     print('==========================================')
-    G.printInfo(20, False, False)
+    #G.printInfo(20, False, False)
     #G.printInfoDyna(dic_mus_year_collab)
     print('==========================================')
 
@@ -218,9 +217,10 @@ def filter_instrument(musician_instru):
 
 def create_edge_instru(dic, pds, G):
     for keyinstru in dic:
-        for instru in dic:
-            if(keyinstru != instru):
+        for instru in dic[keyinstru]:
+            if(instru != keyinstru):
                 G.addedgeweight(keyinstru, instru, pds[keyinstru][instru])
+                
 
 # Build edges between nodes
 def create_edge(dic_alb_musician, dict_pds, G, create_dic_instru = False):

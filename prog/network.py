@@ -9,6 +9,7 @@ import powerlaw
 
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
+import matplotlib.colors as colors
 from matplotlib.cm import ScalarMappable
 from matplotlib.colors import ListedColormap
 from itertools import islice
@@ -29,7 +30,7 @@ import csv
 class Network:
     def __init__(self, isDigraph = False):
         if(isDigraph):
-            self.G = nx.DiGraph()
+            self.G = nx.MultiGraph()
         else:
             self.G = nx.Graph()
         self.G_Dynamic = dn.DynGraph()
@@ -78,26 +79,6 @@ class Network:
             deg.append(i)
             occ.append(occurence[i])
         return occ, deg, nb_musician
-
-
-    # Guess the sex of the musician and build a color map
-    def get_sex(self):
-        color_map = []
-        for musician in self.getnodes():
-            mus_tmp = musician.split(" ")
-            gend = self.GenderD.get_gender(mus_tmp[0])
-
-            if(gend=='male'):
-                color_map.append('#DD5D41')
-            elif(gend == 'mostly_male'):
-                color_map.append('#CC8156')
-            elif(gend=='female'):
-                color_map.append('#99EB93')
-            elif(gend == 'mostly_female'):
-                color_map.append('#AAC87F')
-            else:
-                color_map.append('grey')
-        return color_map
 
     ## TODO : move to utility class
 
@@ -410,7 +391,6 @@ class Network:
         fig.suptitle('P.A. max score by year', fontsize=16)
         plt.xlabel('Degree', fontsize=12)
         plt.ylabel('Year', fontsize=8)
-        fig.savefig('max_pa_score_by_year.png')
         plt.show()
         if(draw):
             V.create_video_from_imgs(folder, "test")
@@ -422,21 +402,20 @@ class Network:
             pos = nx.circular_layout(self.G)
         else:
             pos = nx.spring_layout(self.G, 2/math.sqrt(self.G.order()))
-
+        
+        d = dict(self.G.degree)
+        self.G = nx.Graph(self.G)
+        edges = self.G.edges()
         if(instru):
+            color_lookup = {k:v for v, k in enumerate(sorted(set(self.G.nodes())))}
+            low, *_, high = sorted(color_lookup.values())
+            norm = colors.Normalize(vmin=low, vmax=high, clip=True)
+            mapper = cm.ScalarMappable(norm=norm, cmap=cm.tab20c) #magma
             
-            edges = self.G.edges()
-            weights = [self.G[u][v]['weight']/100 for u,v in edges]
-            nx.draw_networkx_nodes(self.G, pos, node_size=[v * 0.5 for v in d.values()],  alpha=0.8, node_color ="#FF5733")
-            nx.draw_networkx_edges(self.G, pos,  width=weights, connectionstyle=f'arc3,rad=0.2', arrowstyle='-', arrowsize = 0.1, alpha=0.1, edge_color="#212121")
-            nx.draw_networkx_labels(self.G, pos, font_size = 2, font_color = "#212121")
+            weights = [math.sqrt(self.G[u][v]['weight'])/10 for u,v in edges]
+            nx.draw_networkx(self.G, pos=pos, node_size=[(v+1)*0.05 for v in d.values()], width=weights, node_color=[mapper.to_rgba(i) for i in color_lookup.values()], edge_color="grey", with_labels=True, font_size = 7, font_color = "#303030")
         else:
-            d = dict(self.G.degree)
-            edges = self.G.edges()
-            weights = [self.G[u][v]['weight']/100 for u,v in edges]
-            nx.draw_networkx_nodes(self.G, pos, node_size=[v * 0.5 for v in d.values()],  alpha=0.8, node_color ="#FF5733")
-            nx.draw_networkx_edges(self.G, pos,  width=weights, connectionstyle=f'arc3,rad=0.2', arrowstyle='-', arrowsize = 0.1, alpha=0.1, edge_color="#212121")
-            nx.draw_networkx_labels(self.G, pos, font_size = 2, font_color = "#212121")
+            weights = [self.G[u][v]['weight'] for u,v in edges]
+            nx.draw_networkx(G_mul, pos=pos, node_size=[(v+1) * 0.01 for v in d.values()], cmap=cmap, node_color ="#5792ad", edge_color="grey", width=weights, with_labels=True, font_size = 0.5, font_color = "white")
         plt.axis('off')
-        plt.savefig("simple_network.png")
         plt.show()
