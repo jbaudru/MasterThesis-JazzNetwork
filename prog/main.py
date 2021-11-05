@@ -62,7 +62,7 @@ def main():
     lst_data_set_album = ["../data/data.csv", "../data/data2.csv","../data/data3.csv","../data/data4.csv", "../data/data5.csv", "../data/data6.csv"]
     
     lst_data_set_montreux = []
-    for i in range(7, 97):
+    for i in range(7, 116):
         filename = "../data/data" + str(i) + "c.csv"
         lst_data_set_montreux.append(filename)
 
