@@ -202,10 +202,11 @@ def create_node(dic_alb_musician, G):
                 else:
                     musician_name = musician
                 if("&amp;" in musician_name):
-                    #replace par &
-                    pass
+                    ind = musician_name.index("&amp;")
+                    musician_name = musician_name[:ind] + "&" + musician_name[ind+5:]
                 #print(musician_name)
-                G.addnode(musician_name)
+                if(musician_name != "voc)            "):
+                    G.addnode(musician_name)
     return dic_instru_mus
 
 ## TODO : must be OPTIMIZE
