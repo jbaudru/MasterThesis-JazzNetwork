@@ -100,9 +100,9 @@ def main():
     #create_dynamic_edge(dic_mus_collab, G, dic_mus_year_collab)
 
     print('4 - Drawing.')
-    #G.show_network(False, False)
+    G.show_network(False, False)
 
-    G.show_community(True) # ouvrir le fichier, pas juste previsu
+    #G.show_community(True) # ouvrir le fichier, pas juste previsu
     #G.show_occurence()
     #G.show_clustering()
     #G.get_gamma_value()
