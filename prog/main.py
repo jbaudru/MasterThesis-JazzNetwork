@@ -310,6 +310,7 @@ def create_edge(dic_alb_musician, dict_pds, G):
     for k in dic_alb_musician:
         for kk in dic_alb_musician:
             if(k != kk):
+                ## TODO : better way to get all the combinaison of the musicians -> lib
                 for musician in dic_alb_musician[k]:
                     for musician2 in dic_alb_musician[k]:
                         if(musician != musician2):
