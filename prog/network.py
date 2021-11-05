@@ -145,11 +145,12 @@ class Network:
     def printInfo(self, num_of_node_to_prt = 10, in_q1_q2 = False, neighbors = False):
         occ, deg, nb_musician = self.computeoccudeg()
         d = dict(self.G.degree)
-        print("Clustering coefficient : ", nx.average_clustering(self.G))
-        print("Transitivity value : ", nx.transitivity(self.G))
-        if(not self.isDig):
-            partition = community_louvain.best_partition(self.G)
-            print("Number of community : ", max(partition.values())+1)
+
+        print('==========================================')
+        print("Clustering coefficient : ", nx.average_clustering(nx.Graph(self.G)))
+        print("Transitivity value : ", nx.transitivity(nx.Graph(self.G)))
+        partition = community_louvain.best_partition(nx.Graph(self.G))
+        print("Number of community : ", max(partition.values())+1)
         print("Total number of nodes : ", nb_musician)
         print("Average degree : ", sum(deg)/len(deg))
 
@@ -404,18 +405,18 @@ class Network:
             pos = nx.spring_layout(self.G, 2/math.sqrt(self.G.order()))
         
         d = dict(self.G.degree)
-        self.G = nx.Graph(self.G)
-        edges = self.G.edges()
+        H = nx.Graph(self.G)
+        edges = H.edges()
         if(instru):
-            color_lookup = {k:v for v, k in enumerate(sorted(set(self.G.nodes())))}
+            color_lookup = {k:v for v, k in enumerate(sorted(set(H.nodes())))}
             low, *_, high = sorted(color_lookup.values())
             norm = colors.Normalize(vmin=low, vmax=high, clip=True)
             mapper = cm.ScalarMappable(norm=norm, cmap=cm.tab20c) #magma
             
-            weights = [math.sqrt(self.G[u][v]['weight'])/10 for u,v in edges]
-            nx.draw_networkx(self.G, pos=pos, node_size=[(v+1)*0.05 for v in d.values()], width=weights, node_color=[mapper.to_rgba(i) for i in color_lookup.values()], edge_color="grey", with_labels=True, font_size = 7, font_color = "#303030")
+            weights = [math.sqrt(H[u][v]['weight'])/10 for u,v in edges]
+            nx.draw_networkx(H, pos=pos, node_size=[(v+1)*0.05 for v in d.values()], width=weights, node_color=[mapper.to_rgba(i) for i in color_lookup.values()], edge_color="grey", with_labels=True, font_size = 7, font_color = "#303030")
         else:
-            weights = [self.G[u][v]['weight'] for u,v in edges]
+            weights = [H[u][v]['weight'] for u,v in edges]
             nx.draw_networkx(G_mul, pos=pos, node_size=[(v+1) * 0.01 for v in d.values()], cmap=cmap, node_color ="#5792ad", edge_color="grey", width=weights, with_labels=True, font_size = 0.5, font_color = "white")
         plt.axis('off')
         plt.show()

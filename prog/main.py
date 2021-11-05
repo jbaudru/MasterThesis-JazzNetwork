@@ -85,17 +85,19 @@ def main():
     pds = comput_weight(dic_mus_collab, G)
     dic_instru_mus = create_edge(dic_mus_collab, pds, G, True)
     
-    print("test instru réseau")
+    print('4 - Drawing.')
     H = n.Network(True)
     create_node(dic_instru_mus, H)
     pds2 = comput_weight_instru(dic_instru_mus, H)
     
     create_edge_instru(dic_instru_mus, pds2, H)
     H.show_network(True, True)
+    H.printInfo(5, False, False)
+    
     #print('3.2 - Building dynamic edges.')
     #create_dynamic_edge(dic_mus_collab, G, dic_mus_year_collab)
 
-    print('4 - Drawing.')
+    #print('4 - Drawing.')
     #H.show_network(False, False)
     #G.show_network(False, True)
     #G.show_community(False) # ouvrir le fichier, pas juste previsu
@@ -105,8 +107,7 @@ def main():
     #G.show_rich_club_distrib()
     #G.show_distrib_pk()
     #G.show_dynamic_network(dic_mus_year_collab, False)
-
-    print('==========================================')
+    
     #G.printInfo(20, False, False)
     #G.printInfoDyna(dic_mus_year_collab)
     print('==========================================')
