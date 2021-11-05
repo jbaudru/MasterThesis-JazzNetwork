@@ -27,11 +27,15 @@ import gender_guesser.detector as gender
 import csv
 
 class Network:
-    def __init__(self):
-        self.G = nx.Graph()
+    def __init__(self, isDigraph = False):
+        if(isDigraph):
+            self.G = nx.DiGraph()
+        else:
+            self.G = nx.Graph()
         self.G_Dynamic = dn.DynGraph()
         self.node_sizes = []
         self.GenderD = gender.Detector()
+        self.isDig = isDigraph
 
 
     def addnode(self, name):
@@ -160,10 +164,11 @@ class Network:
     def printInfo(self, num_of_node_to_prt = 10, in_q1_q2 = False, neighbors = False):
         occ, deg, nb_musician = self.computeoccudeg()
         d = dict(self.G.degree)
-        partition = community_louvain.best_partition(self.G)
         print("Clustering coefficient : ", nx.average_clustering(self.G))
         print("Transitivity value : ", nx.transitivity(self.G))
-        print("Number of community : ", max(partition.values())+1)
+        if(not self.isDig):
+            partition = community_louvain.best_partition(self.G)
+            print("Number of community : ", max(partition.values())+1)
         print("Total number of nodes : ", nb_musician)
         print("Average degree : ", sum(deg)/len(deg))
 
@@ -412,24 +417,26 @@ class Network:
 
 
     ## TODO : move to 'gui'
-    def show_network(self, make_circular = False, draw_sex_color = False):
-        col = self.get_sex()
-        d = dict(self.G.degree)
+    def show_network(self, make_circular = False, instru = False):
         if(make_circular):
             pos = nx.circular_layout(self.G)
         else:
             pos = nx.spring_layout(self.G, 2/math.sqrt(self.G.order()))
-            #pos = nx.kamada_kawai_layout(self.G)
-        #nx.draw(self.G, pos, node_size=[v * 5 for v in d.values()], node_color ="#5792ad", edge_color="#bfbfbf", with_labels = True, font_size = 7, font_color = "#212121")
-        edges = self.G.edges()
-        weights = [self.G[u][v]['weight'] for u,v in edges]
-        if(draw_sex_color):
-            nx.draw(self.G, pos, node_size=[v * 1 for v in d.values()], node_color =col, edge_color="#bfbfbf", with_labels = True, font_size = 7, font_color = "#212121", width=weights)
-        else:
-            #nx.draw(self.G, pos, node_size=[v * 5 for v in d.values()], node_color ="#5792ad", edge_color="#bfbfbf", with_labels = True, font_size = 3, font_color = "#212121", width=weights)
+
+        if(instru):
+            
+            edges = self.G.edges()
+            weights = [self.G[u][v]['weight']/100 for u,v in edges]
             nx.draw_networkx_nodes(self.G, pos, node_size=[v * 0.5 for v in d.values()],  alpha=0.8, node_color ="#FF5733")
-            nx.draw_networkx_edges(self.G, pos,  width=weights, alpha=0.1, edge_color="#212121")
+            nx.draw_networkx_edges(self.G, pos,  width=weights, connectionstyle=f'arc3,rad=0.2', arrowstyle='-', arrowsize = 0.1, alpha=0.1, edge_color="#212121")
             nx.draw_networkx_labels(self.G, pos, font_size = 2, font_color = "#212121")
-            plt.axis('off')
+        else:
+            d = dict(self.G.degree)
+            edges = self.G.edges()
+            weights = [self.G[u][v]['weight']/100 for u,v in edges]
+            nx.draw_networkx_nodes(self.G, pos, node_size=[v * 0.5 for v in d.values()],  alpha=0.8, node_color ="#FF5733")
+            nx.draw_networkx_edges(self.G, pos,  width=weights, connectionstyle=f'arc3,rad=0.2', arrowstyle='-', arrowsize = 0.1, alpha=0.1, edge_color="#212121")
+            nx.draw_networkx_labels(self.G, pos, font_size = 2, font_color = "#212121")
+        plt.axis('off')
         plt.savefig("simple_network.png")
         plt.show()
