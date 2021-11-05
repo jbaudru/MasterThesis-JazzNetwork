@@ -36,8 +36,8 @@ def main():
     """
 
 
-    num = 13
-    for i in range(2200, 10000, 200): #37000 upper bound
+    num = 100
+    for i in range(19600, 37000, 200): #37000 upper bound
         filename = "data" + str(num) + "c.csv"
         print("\nBuilding ", filename)
         web_scrapping_jazz_montreux("https://database.montreuxjazz.com/", i, i + 200, filename, filter)
@@ -47,7 +47,7 @@ def main():
 # Get data from Wiki with Pandas, Tables from website are converted in Dataframes
 def web_scrapping_site_1():
     url1 = "https://fr.wikipedia.org/wiki/Liste_des_albums_de_jazz_les_plus_vendus"
-    df_list = pd.read_html(url1)
+    df_list = pd.read_html(url1) 
     path = "../data/"
     name = path + "data1.csv"
     file = open(name, 'w')
@@ -145,13 +145,13 @@ def web_scrapping_jazz_montreux(url, x, y, datasetname, filter):
                         if(elem[-6:] == "</div>"):
                             elem = elem[:-6]
 
-                        if(elem[0]== " "): #delete space at the beggging
+                        if(elem[0]== " " and len(elem) > 1): #delete space at the beggging
                             ind = 0
                             while(elem[ind] == " "):
                                 ind+=1
                             elem = elem[ind:]
 
-                        if(elem[-1]== " "): #delete space at the end
+                        if(elem[-1]== " " and len(elem) > 1): #delete space at the end
                             ind = 1
                             while(elem[-ind] == " "):
                                 ind+=1
