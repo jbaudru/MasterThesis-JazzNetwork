@@ -59,7 +59,7 @@ Duke Ellington  :  154
 def main():
     G = n.Network()
 
-    lst_data_set = ["../data/data.csv", "../data/data2.csv","../data/data3.csv","../data/data4.csv", "../data/data5.csv", "../data/data6.csv", "../data/data7.csv"]
+    lst_data_set = ["../data/data.csv", "../data/data2.csv","../data/data3.csv","../data/data4.csv", "../data/data5.csv", "../data/data6.csv"]
     #lst_data_set = ["../data/rap_belge.csv"]
     #lst_data_set = ["../data/ex.csv"]
     #lst_data_set = ["../data/data7c.csv"]
@@ -196,7 +196,7 @@ def main():
     print('4 - Drawing.')
     #G.show_network(False, False)
 
-    G.show_community(False) # ouvrir le fichier, pas juste previsu
+    G.show_community(True) # ouvrir le fichier, pas juste previsu
     #G.show_occurence()
     #G.show_clustering()
     #G.get_gamma_value()
