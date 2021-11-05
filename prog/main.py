@@ -59,22 +59,11 @@ Duke Ellington  :  154
 def main():
     G = n.Network()
 
-    #lst_data_set = ["../data/data.csv", "../data/data2.csv","../data/data3.csv","../data/data4.csv", "../data/data5.csv", "../data/data6.csv", "../data/data7.csv"]
+    lst_data_set = ["../data/data.csv", "../data/data2.csv","../data/data3.csv","../data/data4.csv", "../data/data5.csv", "../data/data6.csv", "../data/data7.csv"]
     #lst_data_set = ["../data/rap_belge.csv"]
     #lst_data_set = ["../data/ex.csv"]
     #lst_data_set = ["../data/data7c.csv"]
-    lst_data_set = ["../data/data7c.csv",
-                    "../data/data8c.csv",
-                    "../data/data9c.csv",
-                    "../data/data10c.csv",
-                    "../data/data11c.csv",
-                    "../data/data12c.csv",
-                    "../data/data13c.csv",
-                    "../data/data14c.csv",
-                    "../data/data15c.csv",
-                    "../data/data16c.csv",
-                    "../data/data17c.csv",
-                    ]
+
     """
     lst_data_set = ["../data/data7.csv",
                     "../data/data8.csv",

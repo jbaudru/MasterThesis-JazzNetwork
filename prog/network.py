@@ -338,7 +338,7 @@ class Network:
 
         ax.axis('off')
         fig.set_facecolor('black')
-        plt.savefig("../data/graph_new/community.png")
+        #plt.savefig("community.png")
         plt.show()
 
     ## TODO : move to 'video'
