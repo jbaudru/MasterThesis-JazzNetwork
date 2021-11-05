@@ -59,112 +59,18 @@ Duke Ellington  :  154
 def main():
     G = n.Network()
 
-    lst_data_set = ["../data/data.csv", "../data/data2.csv","../data/data3.csv","../data/data4.csv", "../data/data5.csv", "../data/data6.csv"]
-    #lst_data_set = ["../data/rap_belge.csv"]
-    #lst_data_set = ["../data/ex.csv"]
-    #lst_data_set = ["../data/data7c.csv"]
-
-    """
-    lst_data_set = ["../data/data7.csv",
-                    "../data/data8.csv",
-                    "../data/data9.csv",
-                    "../data/data10.csv",
-                    "../data/data11.csv",
-                    "../data/data12.csv",
-                    "../data/data13.csv",
-                    "../data/data14.csv",
-                    "../data/data15.csv",
-                    "../data/data16.csv",
-                    "../data/data17.csv",
-                    "../data/data18.csv",
-                    "../data/data19.csv",
-                    "../data/data20.csv",
-                    "../data/data21.csv",
-                    "../data/data22.csv",
-                    "../data/data23.csv",
-                    "../data/data24.csv",
-                    "../data/data25.csv",
-                    "../data/data26.csv",
-                    "../data/data27.csv",
-                    "../data/data28.csv",
-                    "../data/data29.csv",
-                    "../data/data30.csv",
-                    "../data/data31.csv",
-                    "../data/data32.csv",
-                    "../data/data33.csv",
-                    "../data/data34.csv",
-                    "../data/data35.csv",
-                    "../data/data36.csv",
-                    "../data/data37.csv",
-                    "../data/data38.csv",
-                    "../data/data39.csv",
-                    "../data/data40.csv",
-                    "../data/data41.csv",
-                    "../data/data42.csv",
-                    "../data/data43.csv",
-                    "../data/data44.csv",
-                    "../data/data45.csv",
-                    "../data/data46.csv",
-                    "../data/data47.csv",
-                    "../data/data48.csv",
-                    "../data/data49.csv",
-                    "../data/data50.csv",
-                    "../data/data51.csv",
-                    "../data/data52.csv",
-                    "../data/data53.csv",
-                    "../data/data54.csv",
-                    "../data/data55.csv",
-                    "../data/data56.csv",
-                    "../data/data57.csv",
-                    "../data/data58.csv",
-                    "../data/data59.csv",
-                    "../data/data60.csv",
-                    "../data/data61.csv",
-                    "../data/data62.csv",
-                    "../data/data63.csv",
-                    "../data/data64.csv",
-                    "../data/data65.csv",
-                    "../data/data66.csv",
-                    "../data/data67.csv",
-                    "../data/data68.csv",
-                    "../data/data69.csv",
-                    "../data/data70.csv",
-                    "../data/data71.csv",
-                    "../data/data72.csv",
-                    "../data/data73.csv",
-                    "../data/data74.csv",
-                    "../data/data75.csv",
-                    "../data/data76.csv",
-                    "../data/data77.csv",
-                    "../data/data78.csv",
-                    "../data/data79.csv",
-                    "../data/data80.csv",
-                    "../data/data81.csv",
-                    "../data/data82.csv",
-                    "../data/data83.csv",
-                    "../data/data84.csv",
-                    "../data/data85.csv",
-                    "../data/data86.csv",
-                    "../data/data87.csv",
-                    "../data/data88.csv",
-                    "../data/data89.csv",
-                    "../data/data90.csv",
-                    "../data/data91.csv",
-                    "../data/data92.csv",
-                    "../data/data93.csv",
-                    "../data/data94.csv",
-                    "../data/data95.csv",
-                    "../data/data96.csv",
-                    "../data/data97.csv",
-                    ]
-    """
-
+    lst_data_set_album = ["../data/data.csv", "../data/data2.csv","../data/data3.csv","../data/data4.csv", "../data/data5.csv", "../data/data6.csv"]
+    
+    lst_data_set_montreux = []
+    for i in range(7, 97):
+        filename = "../data/data" + str(i) + "c.csv"
+        lst_data_set_montreux.append(filename)
 
 
     print('==========================================')
 
     print('1.1 - Merging data sets and creating datastructure')
-    dic_mus_collab, dic_mus_year_collab = merge_datasets(lst_data_set)
+    dic_mus_collab, dic_mus_year_collab = merge_datasets(lst_data_set_montreux)
     #print('1.2 - Sorting data sets.')
     #dic_mus_collab, dic_mus_year_collab = sort_dict_by_year(dic_mus_collab, dic_mus_year_collab)
 
