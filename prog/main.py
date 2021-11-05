@@ -4,23 +4,33 @@ import data_parser as p
 """
 # OUTPUT : FESTIVAL
 ==========================================
-Clustering coefficient :  0.9204529908238623
-Transitivity value :  0.7131485284798672
-Number of community :  1166
-Total number of nodes :  13796
-Average degree :  70.67226890756302
+Clustering coefficient :  0.9176488210224493
+Transitivity value :  0.7087452138341629
+Number of community :  885
+Total number of nodes :  12877
+Average degree :  66.35135135135135
 ==========================================
 List of most connected nodes and their degree :
-David Sanborn 13  :  152
-Steve Ferrone 13  :  161
-Patti Austin 12  :  169
-Chaka Khan 10  :  187
-Claude Nobs 11  :  211
-Herbie Hancock 14  :  212
-Nathan East 11  :  218
-Toots Thielemans 16  :  220
-George Duke 11  :  276
-Quincy Jones 12  :  280
+Ray Cooper   :  108
+Randy Brecker   :  114
+Penny Ray   :  122
+Greg Phillinganes   :  125
+Patti Austin   :  125
+Howard Johnson   :  127
+Keith Wilson   :  127
+James ""Hutch"" Hutchinson   :  128
+John Marshall   :  132
+Chaka Khan   :  143
+David Sanborn   :  155
+Steve Ferrone   :  162
+Herbie Hancock   :  174
+Toots Thielemans   :  177
+Nathan East   :  177
+voc)               :  187
+Claude Nobs   :  198
+musical director)  :  232
+Quincy Jones   :  272
+George Duke   :  283
 ==========================================
 
 # OUTPUT : Disque Wikipedia
