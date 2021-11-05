@@ -4,33 +4,23 @@ import data_parser as p
 """
 # OUTPUT : FESTIVAL
 ==========================================
-Clustering coefficient :  0.9176488210224493
-Transitivity value :  0.7087452138341629
-Number of community :  885
-Total number of nodes :  12877
-Average degree :  66.35135135135135
+Clustering coefficient :  0.9204529908238623
+Transitivity value :  0.7131485284798672
+Number of community :  1166
+Total number of nodes :  13796
+Average degree :  70.67226890756302
 ==========================================
 List of most connected nodes and their degree :
-Ray Cooper   :  108
-Randy Brecker   :  114
-Penny Ray   :  122
-Greg Phillinganes   :  125
-Patti Austin   :  125
-Howard Johnson   :  127
-Keith Wilson   :  127
-James ""Hutch"" Hutchinson   :  128
-John Marshall   :  132
-Chaka Khan   :  143
-David Sanborn   :  155
-Steve Ferrone   :  162
-Herbie Hancock   :  174
-Toots Thielemans   :  177
-Nathan East   :  177
-voc)               :  187
-Claude Nobs   :  198
-musical director)  :  232
-Quincy Jones   :  272
-George Duke   :  283
+David Sanborn 13  :  152
+Steve Ferrone 13  :  161
+Patti Austin 12  :  169
+Chaka Khan 10  :  187
+Claude Nobs 11  :  211
+Herbie Hancock 14  :  212
+Nathan East 11  :  218
+Toots Thielemans 16  :  220
+George Duke 11  :  276
+Quincy Jones 12  :  280
 ==========================================
 
 # OUTPUT : Disque Wikipedia
@@ -72,7 +62,7 @@ def main():
     lst_data_set_album = ["../data/data.csv", "../data/data2.csv","../data/data3.csv","../data/data4.csv", "../data/data5.csv", "../data/data6.csv"]
     
     lst_data_set_montreux = []
-    for i in range(7, 116):
+    for i in range(7, 50):
         filename = "../data/data" + str(i) + "c.csv"
         lst_data_set_montreux.append(filename)
 
@@ -112,7 +102,7 @@ def main():
     print('4 - Drawing.')
     G.show_network(False, False)
 
-    #G.show_community(True) # ouvrir le fichier, pas juste previsu
+    #G.show_community(False) # ouvrir le fichier, pas juste previsu
     #G.show_occurence()
     #G.show_clustering()
     #G.get_gamma_value()
@@ -168,32 +158,14 @@ def create_node(dic_alb_musician, G):
     for k in dic_alb_musician:
         for musician in dic_alb_musician[k]:
             if(musician != "" and musician != " " and len(musician) > 2):
+                
                 if("(" in musician):
                     muscian_data = musician.split("(")
                     musician_name = muscian_data[0]
                     musician_instru = muscian_data[1][:-1]
 
-                    instrument = "unknown"
-                    if(musician_instru.lower() in ["bass", "b", "bas", "ba", "double bass", "basse"]):
-                        instrument = "bass"
-                    if(musician_instru.lower() in ["artist", "vocalist", "vocal", "voc", "voca", "vocals", "lead vocals", "vo", "chant", "MC", "choriste", "backing vocals", "backvocals", "back voc", "singer"]):
-                        instrument = "vocal"
-                    if(musician_instru.lower() in ["batterie", "percu", "percussion", "d", "drums", "per", "dr"]):
-                        instrument = "drum"
-                    if(musician_instru.lower() in ["guitar", "g", "guitare", "guitars", "guit", "guita"]):
-                        instrument = "guitar"
-                    if(musician_instru.lower() in ["piano", "keyboards", "keyboard", "claviers", "kbds", "ke", "keys", "p", "k"]):
-                        instrument = "piano/clavier"
-                    if(musician_instru.lower() in ["trombon", "trombone"]):
-                        instrument = "trombon"
-                    if(musician_instru.lower() in ["violin", "violon", "viola", "1st violin", "2nd violin"]):
-                        instrument = "violin"
-                    if(musician_instru.lower() in ["cello", "cell"]):
-                        instrument = "cello"
-                    if(musician_instru.lower() in ["flut", "flute"]):
-                        instrument = "flut"
-                    if(musician_instru.lower() in ["dj", "sampler", "turntables", "turntable", "laptop/ad", "laptop"]):
-                        instrument = "dj/laptop/sampler"
+                    instrument = filter_instrument(musician_instru)
+                    
                     if(instrument not in dic_instru_mus):
                         dic_instru_mus[instrument] = [musician_name]
                     else:
@@ -201,13 +173,45 @@ def create_node(dic_alb_musician, G):
 
                 else:
                     musician_name = musician
-                if("&amp;" in musician_name):
-                    ind = musician_name.index("&amp;")
-                    musician_name = musician_name[:ind] + "&" + musician_name[ind+5:]
-                #print(musician_name)
-                if(musician_name != "voc)            "):
+                
+                musician_name = clean_musician_name_unicode(musician_name)
+                                    
+                if("(" not in musician_name and ")" not in musician_name):
                     G.addnode(musician_name)
+
+                    
     return dic_instru_mus
+
+def clean_musician_name_unicode(musician_name):
+    if("&amp;" in musician_name):
+        ind = musician_name.index("&amp;")
+        musician_name = musician_name[:ind] + "&" + musician_name[ind+5:]
+    return musician_name
+
+
+def filter_instrument(musician_instru):
+    instrument = "unknown"
+    if(musician_instru.lower() in ["bass", "b", "bas", "ba", "double bass", "basse"]):
+        instrument = "bass"
+    if(musician_instru.lower() in ["artist", "vocalist", "vocal", "voc.", "voc", "ld voc", "bk voc", "voca", "vocals", "lead vocals", "vo", "chant", "MC", "choriste", "backing vocals", "backvocals", "back voc", "singer"]):
+        instrument = "vocal"
+    if(musician_instru.lower() in ["batterie", "percu", "percussion", "d", "drums", "per", "dr"]):
+        instrument = "drum"
+    if(musician_instru.lower() in ["guitar", "g", "guitare", "guitars", "guit", "guita"]):
+        instrument = "guitar"
+    if(musician_instru.lower() in ["piano", "keyboards", "keyboard", "claviers", "kbds", "ke", "keys", "p", "k"]):
+        instrument = "piano/clavier"
+    if(musician_instru.lower() in ["trombon", "trombone"]):
+        instrument = "trombon"
+    if(musician_instru.lower() in ["violin", "violon", "viola", "1st violin", "2nd violin"]):
+        instrument = "violin"
+    if(musician_instru.lower() in ["cello", "cell"]):
+        instrument = "cello"
+    if(musician_instru.lower() in ["flut", "flute"]):
+        instrument = "flut"
+    if(musician_instru.lower() in ["dj", "sampler", "turntables", "turntable", "laptop/ad", "laptop"]):
+        instrument = "dj/laptop/sampler"
+    return instrument
 
 ## TODO : must be OPTIMIZE
 
@@ -221,17 +225,28 @@ def create_edge(dic_alb_musician, dict_pds, G):
                         if(musician != musician2):
                             if(musician != "" and musician != " " and len(musician) > 2):
                                 if(musician2 != "" and musician2 != " " and len(musician2) > 2):
+                                    # make a function
                                     if("(" in musician):
                                         muscian_data = musician.split("(")
                                         musician_name = muscian_data[0]
                                     else:
                                         musician_name = musician
+                                        
+                                    musician_name = clean_musician_name_unicode(musician_name)                    
+                                    
+                                        
                                     if("(" in musician2):
                                         muscian2_data = musician2.split("(")
                                         musician2_name = muscian2_data[0]
                                     else:
                                         musician2_name = musician2
-                                    G.addedgeweight(musician_name, musician2_name, dict_pds[musician][musician2])
+                                        
+                                    musician2_name = clean_musician_name_unicode(musician2_name) 
+                                        
+                                    if("(" not in musician_name and ")" not in musician_name and "(" not in musician2_name and ")" not in musician2_name):
+                                        G.addedgeweight(musician_name, musician2_name, dict_pds[musician][musician2])
+
+
 
 ## TODO : must be OPTIMIZE
 
