@@ -310,7 +310,7 @@ class Network:
         weights = [math.sqrt(self.G[u][v]['weight'])/4 for u,v in edges]
         partition = community_louvain.best_partition(self.G)
 
-        pos = nx.spring_layout(self.G, k=0.7, iterations=320) #k=5/math.sqrt(self.G.order())
+        pos = nx.spring_layout(self.G, 2/math.sqrt(self.G.order())) #k=5/math.sqrt(self.G.order())
         #twilight_shifted
         cmap = cm.get_cmap("twilight_shifted", max(partition.values()) + 1)
 
@@ -333,7 +333,7 @@ class Network:
             #nx.draw_networkx_labels(G_mul, pos=pos, font_size=2.5, font_color='white')
 
             #Idem que les trois ligne au dessus mais sans les edges en trans et sans bug de edges
-            nx.draw_networkx(G_mul, pos=pos, node_size=[v * 0.2 for v in d.values()], cmap=cmap, node_color=list(partition.values()) , edge_cmap=edgemap, edge_color=cedges, width=weights, connectionstyle=f'arc3,rad=0.2', style='solid', arrowstyle='-', with_labels=True, font_size = 0.2, font_family='Arial Nova', font_color = "white")
+            nx.draw_networkx(G_mul, pos=pos, node_size=[v * 0.01 for v in d.values()], cmap=cmap, node_color=list(partition.values()) , edge_cmap=edgemap, edge_color=cedges, width=weights, connectionstyle=f'arc3,rad=0.2', style='solid', arrowstyle='-', with_labels=False, font_size = 0.5, font_color = "white")
             # linewidths=0.2, edgecolors='black'
 
         ax.axis('off')
