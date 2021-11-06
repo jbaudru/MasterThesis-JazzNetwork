@@ -36,8 +36,8 @@ def main():
     """
 
 
-    num = 124
-    for i in range(24400, 37000, 200): #37000 upper bound
+    num = 128
+    for i in range(25200, 37000, 200): #37000 upper bound
         filename = "data" + str(num) + "c.csv"
         print("\nBuilding ", filename)
         web_scrapping_jazz_montreux("https://database.montreuxjazz.com/", i, i + 200, filename, filter)

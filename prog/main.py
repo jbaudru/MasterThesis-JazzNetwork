@@ -62,7 +62,7 @@ def main():
     lst_data_set_album = ["../data/data.csv", "../data/data2.csv","../data/data3.csv","../data/data4.csv", "../data/data5.csv", "../data/data6.csv"]
     
     lst_data_set_montreux = []
-    for i in range(7, 10):
+    for i in range(176, 186):
         filename = "../data/data" + str(i) + "c.csv"
         lst_data_set_montreux.append(filename)
 
@@ -92,7 +92,7 @@ def main():
     
     create_edge_instru(dic_instru_mus, pds2, H)
     H.show_network(True, True)
-    H.printInfo(5, False, False)
+    H.printInfo(10, False, False)
     
     #print('3.2 - Building dynamic edges.')
     #create_dynamic_edge(dic_mus_collab, G, dic_mus_year_collab)
@@ -164,9 +164,6 @@ def create_node(dic_alb_musician, G):
                     G.addnode(musician_name)
                     
 
-    
-
-
 def get_name_and_instru(musician_dt):
     if("(" in musician_dt):
         muscian_data = musician_dt.split("(")
@@ -189,29 +186,62 @@ def filter_instrument(musician_instru):
     if(len(musician_instru)>1 and ')' in musician_instru):
         ind = musician_instru.index(")")
         musician_instru = musician_instru[:ind]
-                
+        
+    if("/" in musician_instru):
+        musician_instru = musician_instru.split("/")[0]
     instrument = "unknown"
-    if(musician_instru.lower() in ["bass", "b", "bas", "ba", "bs", "double bass", "basse"]):
+    
+    if(musician_instru.lower() in ["bass", "b", "bas", "electric bas", "electric bass", "acoustic bass", "ba", "bs", "double bass", "basse"]):
         instrument = "bass"
-    if(musician_instru.lower() in ["artist", "vocalist", "vocal", "voc.", "voc", "ld voc", "bk voc", "voca", "vocals", "lead vocals", "vo", "chant", "MC", "choriste", "backing vocals", "backvocals", "back voc", "singer"]):
+    elif(musician_instru.lower() in ["artist", "vocalist", "vocal", "voice", "voc.", "voc", "ld voc", "bk voc", "voca", "vocals", "lead vocals", "vo", "chant", "mc" , "m", "choriste", "backing vocals", "backvocals", "back voc", "singer"]):
         instrument = "vocal"
-    if(musician_instru.lower() in ["batterie", "percu", "percussion", "d", "drums", "per", "perc", "dr", "steel dr"]):
+    elif(musician_instru.lower() in ["batterie", "d", "drums", "drum", "dr", "steel dr", "jamaica drums"]):
         instrument = "drum"
-    if(musician_instru.lower() in ["guitar", "g", "guitare", "guitars", "guit", "guita"]):
+    elif(musician_instru.lower() in ["percu", "percus", "percussion", "percussions", "perc.", "per", "perc"]):
+        instrument = "percussion"
+    elif(musician_instru.lower() in ["guitar", "gu", "bjo", "g", "guitare", "guitars", "guit", "guit.", "guita"]):
         instrument = "guitar"
-    if(musician_instru.lower() in ["piano", "keyboards", "keyboard", "claviers", "kbds", "ke", "keys", "p", "k"]):
-        instrument = "piano/clavier"
-    if(musician_instru.lower() in ["trombon", "trombone"]):
+    elif(musician_instru.lower() in ["piano", "keyboards", "keyboard" , "pian", "claviers", "kbds", "ke", "keys", "p", "k"]):
+        instrument = "piano/keyboard"
+    elif(musician_instru.lower() in ["trombon", "trombone"]):
         instrument = "trombon"
-    if(musician_instru.lower() in ["violin", "violon", "viola", "1st violin", "2nd violin", "vln"]):
+    elif(musician_instru.lower() in ["violin", "violon", "viola", "1st violin", "2nd violin", "1st violi", "2nd violi", "vln", "alto violin"]):
         instrument = "violin"
-    if(musician_instru.lower() in ["cello", "cell"]):
+    elif(musician_instru.lower() in ["cello", "cell"]):
         instrument = "cello"
-    if(musician_instru.lower() in ["flut", "flute"]):
+    elif(musician_instru.lower() in ["tuba"]):
+        instrument = "tuba"
+    elif(musician_instru.lower() in ["flut", "flute"]):
         instrument = "flut"
-    if(musician_instru.lower() in ["dj", "sampler", "turntables", "tabl", "turntable", "laptop/ad", "laptop"]):
+    elif(musician_instru.lower() in ["french horn"]):
+        instrument = "french horn"
+    elif(musician_instru.lower() in ["clarinet", "oboe"]):
+        instrument = "clarinet"
+    elif(musician_instru.lower() in ["bassoon"]):
+        instrument = "bassoon"
+    elif(musician_instru.lower() in ["cuivre"]):
+        instrument = "cuivre"
+    elif(musician_instru.lower() in ["string", "strings"]):
+        instrument = "strings"
+    elif(musician_instru.lower() in ["trumpet", "tr", "trumpe"]):
+        instrument = "trumpet"
+    elif(musician_instru.lower() in ["sax", "sa", "saxo", "baritone sax", "tenor sax", "alto sax", "tenor saxophone", "baritone saxophone"]):
+        instrument = "saxophone"
+    elif(musician_instru.lower() in ["hca"]):
+        instrument = "harmonica"
+    elif(musician_instru.lower() in ["accordio", "accordion"]):
+        instrument = "accordion"
+    elif(musician_instru.lower() in ["n'goni", "kora"]):
+        instrument = "n'goni"
+    elif(musician_instru.lower() in ["dj", "sampler", "turntab", "turntables", "tabl", "turntable", "laptop/ad", "laptop"]):
         instrument = "dj/laptop/sampler"
-
+    
+    """
+    else:
+        if(musician_instru.lower() != "" and musician_instru.lower() != "unknown"):
+            print(musician_instru.lower())
+    """
+    
     return instrument
 
 ## TODO : must be OPTIMIZE

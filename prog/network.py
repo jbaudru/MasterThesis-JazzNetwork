@@ -413,8 +413,8 @@ class Network:
             norm = colors.Normalize(vmin=low, vmax=high, clip=True)
             mapper = cm.ScalarMappable(norm=norm, cmap=cm.tab20c) #magma
             
-            weights = [math.sqrt(H[u][v]['weight'])/10 for u,v in edges]
-            nx.draw_networkx(H, pos=pos, node_size=[(v+1)*0.05 for v in d.values()], width=weights, node_color=[mapper.to_rgba(i) for i in color_lookup.values()], edge_color="grey", with_labels=True, font_size = 7, font_color = "#303030")
+            weights = [1/H[u][v]['weight']*2 for u,v in edges]
+            nx.draw_networkx(H, pos=pos, node_size=[(1/(v+1))*2 for v in d.values()], width=weights, node_color=[mapper.to_rgba(i) for i in color_lookup.values()], edge_color="grey", with_labels=True, font_size = 7, font_color = "#303030")
         else:
             weights = [H[u][v]['weight'] for u,v in edges]
             nx.draw_networkx(G_mul, pos=pos, node_size=[(v+1) * 0.01 for v in d.values()], cmap=cmap, node_color ="#5792ad", edge_color="grey", width=weights, with_labels=True, font_size = 0.5, font_color = "white")
