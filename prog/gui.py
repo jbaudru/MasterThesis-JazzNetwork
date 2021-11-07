@@ -7,10 +7,12 @@ from matplotlib.cm import ScalarMappable
 from matplotlib.colors import ListedColormap
 import community as community_louvain
 import numpy as np
-import math
 from decimal import Decimal
 
+import math
+
 import network as n
+import video as vid
 
 class Gui:
     def __init__(self, graph):
@@ -44,7 +46,7 @@ class Gui:
                     print(mus, " : ", d_top[mus])
                 else:
                     print(mus, self.networketneighbours(mus)[0:9])
-
+        print('==========================================')
 
     def show_network(self, make_circular = False, instru = False):
         if(make_circular):
@@ -173,3 +175,71 @@ class Gui:
         ax.axis('off')
         fig.set_facecolor('black')
         plt.show()
+
+
+    def show_dynamic_network(self, time, draw = False):
+        V = vid.Video()
+        folder = "../data/tmp_vid/"
+
+        pos = nx.kamada_kawai_layout(self.network.getdyngraph())
+        lst_year = list(time.values())
+        lst_year = list(dict.fromkeys(lst_year)) #remove duplicate year
+        start = lst_year[0]
+
+        lst_nodes = self.network.getdyngraph().nodes() #get all node (a modifier si marche pas)
+        final_lst_deg = dict(self.network.getgraph().degree)
+        lst_deg = {}
+
+        pa_all_time = list(nx.preferential_attachment(self.network.getdyngraph()))
+        max_pa = 0
+        max_txt = ""
+        for it in range(0, len(pa_all_time)):
+            if(pa_all_time[it][2] > max_pa):
+                max_pa = pa_all_time[it][2]
+                max_txt = pa_all_time[it]
+        print(max_txt)
+
+        max_pa_by_year = []
+        years = []
+
+        for j in range(0,len(lst_year)-1):
+            if(lst_year[j] != "year"):
+                plt.figure(figsize=(15,10), dpi=100)
+                print("Creation network for year : ", lst_year[j])
+
+                s = self.network.getdyngraph().time_slice(t_from= int(start), t_to= int(lst_year[j]))
+                lst_nodes = self.network.getdyngraph().nodes(t=int(lst_year[j]))
+
+                cur_dict_deg = dn.degree(self.network.getdyngraph(), lst_nodes, t=int(lst_year[j]))
+
+                lst_nodes_s = s.nodes()
+                cur_dict_deg_s = dn.degree(s)
+
+
+                pref_att_curr_year = list(nx.preferential_attachment(s))
+                max_pa_year = 0
+                for it in range(0,len(pref_att_curr_year)):
+                    if(pref_att_curr_year[it][2] > max_pa_year):
+                        max_pa_year = pref_att_curr_year[it][2]
+                print("P.A. score max by year", max_pa_year)
+                max_pa_by_year.append(max_pa_year)
+                years.append(lst_year[j])
+
+                if(draw):
+                    ax = plt.gca()
+                    ax.margins(0.1, 0.1)
+                    ax.set_title(lst_year[j])
+                    nx.draw(s, pos, node_size=[v * 2 for v in cur_dict_deg_s.values()], node_color ="#5792ad", edge_color="#bfbfbf", with_labels = True, font_size = 3, font_color = "#212121", ax=ax)
+                    _ = ax.axis('off')
+                    name = str(lst_year[j])+".png"
+                    plt.savefig(folder + name, dpi=100)
+                    #plt.show()
+
+        fig = plt.figure()
+        plt.plot(max_pa_by_year, years, 'o-')
+        fig.suptitle('P.A. max score by year', fontsize=16)
+        plt.xlabel('Degree', fontsize=12)
+        plt.ylabel('Year', fontsize=8)
+        plt.show()
+        if(draw):
+            V.create_video_from_imgs(folder, "test")

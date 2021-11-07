@@ -60,11 +60,11 @@ Duke Ellington  :  154
 def main():
     G = n.Network()
     uti = util.Utility()
-    
+
     lst_data_set_album = "../data/data_album_wikipedia.csv"
     lst_data_set_montreux = "../data/dataset_live_montreux.csv"
 
-    print('1.1 - Creating datastructure')
+    print('1 - Creating datastructure')
     dic_mus_collab, dic_mus_year_collab = uti.get_dic_from_datasets(lst_data_set_montreux)
     #print('1.2 - Sorting data sets.')
     #dic_mus_collab, dic_mus_year_collab = uti.sort_dict_by_year(dic_mus_collab, dic_mus_year_collab)
@@ -75,45 +75,36 @@ def main():
     #print('2.2 - Creating musicians data sets.')
     #G.create_csv_musician()
 
-    print('3.1 - Building weighted edges.')
+    print('3 - Building weighted edges.')
     pds = G.comput_weight(dic_mus_collab)
     dic_instru_mus = G.create_edge(dic_mus_collab, pds)
 
-    print("clean memory")
+    #G.create_dynamic_edge(dic_mus_collab, G, dic_mus_year_collab)
+
+    print("4 - Cleaning memory")
     dic_mus_collab.clear()
     pds.clear()
     #G.clear()
 
-    print('4 - Drawing.')
+    print('5 - Drawing.')
     H = n.Network(True)
     H.create_node(dic_instru_mus)
     pds2 = H.comput_weight_instru(dic_instru_mus)
     H.create_edge_instru(dic_instru_mus, pds2)
-
     interface = ui.Gui(H)
-    #interface.show_info(10, False, False)
-    #interface.show_network(True, True)
-    interface.show_community(True)
+    interface.show_info(10, False, False)
+    interface.show_network(True, True)
 
-
-
-    #print('3.2 - Building dynamic edges.')
-    #G.create_dynamic_edge(dic_mus_collab, G, dic_mus_year_collab)
-
-    #print('4 - Drawing.')
     #interface = ui.Gui(G)
     #interface.show_network(False, False)
-    #interface.show_community(False) # ouvrir le fichier, pas juste previsu
+    #interface.show_community(False)
     #interface.show_occurence()
     #interface.show_clustering()
-
-    #G.get_gamma_value()
     #interface.show_rich_club_distrib()
     #interface.show_distrib_pk()
     #interface.show_dynamic_network(dic_mus_year_collab, False)
-
     #interface.show_info(20, False, False)
-    print('==========================================')
+
 
 
 if __name__ == '__main__':

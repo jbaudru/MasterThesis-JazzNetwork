@@ -1,46 +1,35 @@
-import video as vid
 import utility as uti
-
-from os import path
 
 import networkx as nx
 import dynetx as dn
 
-import powerlaw
-
-import matplotlib.pyplot as plt
-import matplotlib.cm as cm
-import matplotlib.colors as colors
-from matplotlib.cm import ScalarMappable
-from matplotlib.colors import ListedColormap
-from itertools import islice
-
+import numpy as np
 import pandas as pd
 
 import math
 import random
-from scipy.interpolate import UnivariateSpline
-import numpy as np
+import powerlaw
 
-from ethnicolr import census_ln, pred_census_ln
-import csv
 
 class Network:
-    def __init__(self, isDigraph = False):
+    def __init__(self, isDigraph = False, isDyna = False):
         if(isDigraph):
             self.G = nx.MultiGraph()
         else:
             self.G = nx.Graph()
-        self.G_Dynamic = dn.DynGraph()
+        if(isDyna):
+            self.G_Dynamic = dn.DynGraph()
         self.node_sizes = []
         self.uti = uti.Utility()
+        self.isDyn = isDyna
 
     def clear(self):
         self.G.clear()
 
     def addnode(self, name):
         self.G.add_node(name)
-        self.G_Dynamic.add_node(name)
+        if(self.isDyn):
+            self.G_Dynamic.add_node(name)
 
     def addedge(self, src, dest):
         self.G.add_edge(src, dest)
@@ -63,6 +52,13 @@ class Network:
 
     def getgraph(self):
         return self.G
+
+    def getdyngraph(self):
+        if(self.isDyn):
+            return self.G_Dynamic
+        else:
+            print("Error - contructor argument")
+            quit()
 
     def getneighbours(self, node):
         lst = [n for n in self.G.neighbors(node)]
@@ -170,123 +166,9 @@ class Network:
                                     self.adddynedge(musician, musician2, time)
 
 
-    # Create a database with all the informations on a musician
-    def create_csv_musician(self):
-        dict_alb_musician = dict(self.G.degree)
-        path = "../data/"
-        name = path + "muscians.csv"
-        file = open(name, 'w', newline='')
-        spamWriter = csv.writer(file, delimiter=';', quoting=csv.QUOTE_MINIMAL)
-
-        lst_mus = []
-        for musician in dict_alb_musician:
-            line_in_csv = [musician]
-
-            mus = musician.split(' ')
-            sex = self.GenderD.get_gender(mus[0])
-            line_in_csv.append(sex)
-
-            line_in_csv.append("date de naissance")
-            line_in_csv.append("instrument")
-            line_in_csv.append("country")
-
-            # Get ethnicity with Tensor Flow
-            names = [{'name': mus[0]}]
-            df = pd.DataFrame(names)
-            ethnicity = census_ln(df, 'name').values.tolist()
-            eth = "None"
-            if("nan" not in ethnicity[0][1:]):
-                ethn_pourc = max(ethnicity[0][1:])
-                ind = ethnicity[0].index(ethn_pourc)
-                if(ind == 1):
-                    eth = "White"
-                if(ind == 2):
-                    eth = "Black"
-                if(ind == 3):
-                    eth = "API"
-                if(ind == 4):
-                    eth = "AIAN"
-                if(ind == 5):
-                    eth = "2PRACE"
-                if(ind == 6):
-                    eth = "Hispanic"
-            line_in_csv.append(eth)
-
-            if(musician not in lst_mus):
-                spamWriter.writerow(line_in_csv)
-                lst_mus.append(musician)
-
 
     def get_gamma_value(self):
         lst_deg = list(dict(self.G.degree()).values())
         res = powerlaw.Fit(np.array(lst_deg)+1, xmin=10)
         print("Gamma value : ", res.alpha)
         return res.alpha
-
-
-    def show_dynamic_network(self, time, draw = False):
-        V = vid.Video()
-        folder = "../data/tmp_vid/"
-
-        pos = nx.kamada_kawai_layout(self.G_Dynamic)
-        lst_year = list(time.values())
-        lst_year = list(dict.fromkeys(lst_year)) #remove duplicate year
-        start = lst_year[0]
-
-        lst_nodes = self.G_Dynamic.nodes() #get all node (a modifier si marche pas)
-        final_lst_deg = dict(self.G.degree)
-        lst_deg = {}
-
-        pa_all_time = list(nx.preferential_attachment(self.G_Dynamic))
-        max_pa = 0
-        max_txt = ""
-        for it in range(0, len(pa_all_time)):
-            if(pa_all_time[it][2] > max_pa):
-                max_pa = pa_all_time[it][2]
-                max_txt = pa_all_time[it]
-        print(max_txt)
-
-        max_pa_by_year = []
-        years = []
-
-        for j in range(0,len(lst_year)-1):
-            if(lst_year[j] != "year"):
-                plt.figure(figsize=(15,10), dpi=100)
-                print("Creation network for year : ", lst_year[j])
-
-                s = self.G_Dynamic.time_slice(t_from= int(start), t_to= int(lst_year[j]))
-                lst_nodes = self.G_Dynamic.nodes(t=int(lst_year[j]))
-
-                cur_dict_deg = dn.degree(self.G_Dynamic, lst_nodes, t=int(lst_year[j]))
-
-                lst_nodes_s = s.nodes()
-                cur_dict_deg_s = dn.degree(s)
-
-
-                pref_att_curr_year = list(nx.preferential_attachment(s))
-                max_pa_year = 0
-                for it in range(0,len(pref_att_curr_year)):
-                    if(pref_att_curr_year[it][2] > max_pa_year):
-                        max_pa_year = pref_att_curr_year[it][2]
-                print("P.A. score max by year", max_pa_year)
-                max_pa_by_year.append(max_pa_year)
-                years.append(lst_year[j])
-
-                if(draw):
-                    ax = plt.gca()
-                    ax.margins(0.1, 0.1)
-                    ax.set_title(lst_year[j])
-                    nx.draw(s, pos, node_size=[v * 2 for v in cur_dict_deg_s.values()], node_color ="#5792ad", edge_color="#bfbfbf", with_labels = True, font_size = 3, font_color = "#212121", ax=ax)
-                    _ = ax.axis('off')
-                    name = str(lst_year[j])+".png"
-                    plt.savefig(folder + name, dpi=100)
-                    #plt.show()
-
-        fig = plt.figure()
-        plt.plot(max_pa_by_year, years, 'o-')
-        fig.suptitle('P.A. max score by year', fontsize=16)
-        plt.xlabel('Degree', fontsize=12)
-        plt.ylabel('Year', fontsize=8)
-        plt.show()
-        if(draw):
-            V.create_video_from_imgs(folder, "test")
