@@ -1,4 +1,5 @@
 import video as vid
+import utility as uti
 
 from os import path
 
@@ -14,17 +15,14 @@ from matplotlib.cm import ScalarMappable
 from matplotlib.colors import ListedColormap
 from itertools import islice
 
-import community as community_louvain
 import pandas as pd
 
 import math
 import random
 from scipy.interpolate import UnivariateSpline
 import numpy as np
-from decimal import Decimal
 
 from ethnicolr import census_ln, pred_census_ln
-import gender_guesser.detector as gender
 import csv
 
 class Network:
@@ -35,29 +33,36 @@ class Network:
             self.G = nx.Graph()
         self.G_Dynamic = dn.DynGraph()
         self.node_sizes = []
-        self.GenderD = gender.Detector()
-        self.isDig = isDigraph
+        self.uti = uti.Utility()
 
+    def clear(self):
+        self.G.clear()
 
     def addnode(self, name):
         self.G.add_node(name)
         self.G_Dynamic.add_node(name)
 
-
     def addedge(self, src, dest):
         self.G.add_edge(src, dest)
-
 
     def adddynedge(self, src, dest, time):
         if(str(time).isnumeric()): # Avoid case where there is no year in data set
             self.G_Dynamic.add_interaction(src, dest, t=time)
-
 
     def addedgeweight(self, src, dest, wt):
         self.G.add_edge(src, dest, weight=wt)
 
     def getnodes(self):
         return self.G.nodes
+
+    def getdegree(self):
+        return self.G.degree
+
+    def getedges(self):
+        return self.G.edges()
+
+    def getgraph(self):
+        return self.G
 
     def getneighbours(self, node):
         lst = [n for n in self.G.neighbors(node)]
@@ -80,7 +85,90 @@ class Network:
             occ.append(occurence[i])
         return occ, deg, nb_musician
 
-    ## TODO : move to utility class
+
+    def create_node(self, dic_alb_musician):
+        dic_instru_mus = {}
+        for k in dic_alb_musician:
+            for musician in dic_alb_musician[k]:
+                if(musician != "" and musician != " " and len(musician) > 2):
+                    musician_name, musician_instru = self.uti.get_name_and_instru(musician)
+                    musician_name = self.uti.clean_musician_name_unicode(musician_name)
+                    if("(" not in musician_name and ")" not in musician_name):
+                        self.addnode(musician_name)
+
+
+    def create_edge_instru(self, dic, pds):
+        for keyinstru in dic:
+            for instru in dic[keyinstru]:
+                if(instru != keyinstru):
+                    self.addedgeweight(keyinstru, instru, pds[keyinstru][instru])
+
+    def comput_weight_instru(self, dic_mus_instru):
+        dic_pds_edge = {}
+        tmp_instru = {}
+        for instru in dic_mus_instru:
+            tmp_instru[instru] = 0
+        for instru in dic_mus_instru:
+            dic_pds_edge[instru] = tmp_instru.copy()
+        for instru in dic_mus_instru:
+            for inst in dic_mus_instru[instru]:
+                dic_pds_edge[instru][inst] += 1
+        return dic_pds_edge
+
+
+    def create_edge(self,dic_alb_musician, dict_pds):
+        dic_instru_mus = {}
+        for k in dic_alb_musician:
+            for musician in dic_alb_musician[k]:
+                for musician2 in dic_alb_musician[k]:
+                    if(musician != musician2):
+                        if(musician != "" and musician != " " and len(musician) > 2):
+                            if(musician2 != "" and musician2 != " " and len(musician2) > 2):
+                                musician_name, musician_instru = self.uti.get_name_and_instru(musician)
+                                musician_name = self.uti.clean_musician_name_unicode(musician_name)
+                                musician2_name, musician2_instru = self.uti.get_name_and_instru(musician2)
+                                musician2_name = self.uti.clean_musician_name_unicode(musician2_name)
+                                if("(" not in musician_name and ")" not in musician_name and "(" not in musician2_name and ")" not in musician2_name):
+                                    self.addedgeweight(musician_name, musician2_name, dict_pds[musician][musician2])
+                                    instrument = self.uti.filter_instrument(musician_instru)
+                                    instrument2 = self.uti.filter_instrument(musician2_instru)
+                                    # add to dico instrument
+                                    if(instrument != "unknown" and instrument2 != "unknown"):
+                                        if(instrument not in dic_instru_mus):
+                                            dic_instru_mus[instrument] = [instrument2]
+                                        else:
+                                            dic_instru_mus[instrument].append(instrument2)
+        return dic_instru_mus
+
+
+    def comput_weight(self, dict_alb_musician):
+        dic_all_musician_tmp = {}
+        for k in dict_alb_musician:
+            for musician in dict_alb_musician[k]:
+                if(musician not in dic_all_musician_tmp):
+                    dic_all_musician_tmp[musician] = 0
+        dic_all_musician = {}
+        for mus in dic_all_musician_tmp:
+            dic_all_musician[mus] = dic_all_musician_tmp.copy()
+        for alb in dict_alb_musician:
+            for musician in dict_alb_musician[alb]:
+                for ms in dict_alb_musician[alb]:
+                    if(ms != musician):
+                        dic_all_musician[musician][ms] += 1
+        return dic_all_musician
+
+
+    def create_dynamic_edge(self, dic_alb_musician, G, dic_mus_year_collab):
+        for k in dic_alb_musician:
+            if(str(dic_mus_year_collab[k]).isnumeric()):
+                time = int(dic_mus_year_collab[k])
+                for musician in dic_alb_musician[k]:
+                    for musician2 in dic_alb_musician[k]:
+                        if(musician != musician2):
+                            if(musician != "" and musician != " " and len(musician) > 2):
+                                if(musician2 != "" and musician2 != " " and len(musician2) > 2):
+                                    self.adddynedge(musician, musician2, time)
+
 
     # Create a database with all the informations on a musician
     def create_csv_musician(self):
@@ -128,207 +216,14 @@ class Network:
                 spamWriter.writerow(line_in_csv)
                 lst_mus.append(musician)
 
-    ## TODO : move to 'gui'
 
-    def printInfoDyna(self, time):
-        lst_year = list(time.values())
-        lst_year = list(dict.fromkeys(lst_year)) #remove duplicate year
-
-        occ, deg, nb_musician = self.computeoccudeg()
-        d = dict(self.G.degree)
-        print("Density all time : ", dn.density(self.G_Dynamic))
-
-        # AUTRES PARAMETRES
-
-    ## TODO : move to 'gui'
-
-    def printInfo(self, num_of_node_to_prt = 10, in_q1_q2 = False, neighbors = False):
-        occ, deg, nb_musician = self.computeoccudeg()
-        d = dict(self.G.degree)
-
-        print('==========================================')
-        print("Clustering coefficient : ", nx.average_clustering(nx.Graph(self.G)))
-        print("Transitivity value : ", nx.transitivity(nx.Graph(self.G)))
-        partition = community_louvain.best_partition(nx.Graph(self.G))
-        print("Number of community : ", max(partition.values())+1)
-        print("Total number of nodes : ", nb_musician)
-        print("Average degree : ", sum(deg)/len(deg))
-
-        max_key = []
-        max_value = []
-
-        # Sort dict in order way
-        d = {k: v for k, v in sorted(d.items(), key=lambda item: item[1])}
-        if(in_q1_q2):
-            print('==========================================')
-            print("List of nodes whose degree is between the fst. quartile and the sd. quartile :")
-            #Get the n musician between q1 and q2
-            d_q1_q2 = dict(list(d.items())[len(d)//4:len(d)//2])
-            # Take 50 of the q1-q2
-            lst_musicien = list(islice(d_q1_q2.items(), num_of_node_to_prt))
-            for mus in lst_musicien:
-                print(mus[0], " : ", d_q1_q2[mus[0]])
-        else:
-            print('==========================================')
-            print("List of most connected nodes and their degree :")
-            d_top = dict(list(d.items())[-num_of_node_to_prt:])
-            for mus in d_top:
-                if(not neighbors):
-                    print(mus, " : ", d_top[mus])
-                else:
-                    print(mus, self.getneighbours(mus)[0:9])
-
-
-    # https://stackoverflow.com/questions/38408224/how-to-calculate-ebk-of-networks-with-python
     def get_gamma_value(self):
         lst_deg = list(dict(self.G.degree()).values())
         res = powerlaw.Fit(np.array(lst_deg)+1, xmin=10)
         print("Gamma value : ", res.alpha)
         return res.alpha
 
-    ## TODO : move to 'gui'
 
-    # RESULTAT ETRANGE -> A REVOIR
-    def show_distrib_pk(self):
-        occ, deg, nb_musician = self.computeoccudeg()
-        dict_occ_deg = {}
-        dict_pk = {}
-        dict_deg_gamma = {}
-        lst_deg = []
-        lst_pk = []
-        d = dict(self.G.degree)
-        d = {k: v for k, v in sorted(d.items(), key=lambda item: item[1])}
-
-        # For each degree count the number of node of this degree
-        for name in d:
-            deg = d[name]
-            if(deg > 2):
-                if(deg not in dict_occ_deg):
-                    dict_occ_deg[deg] = 1
-                else:
-                    dict_occ_deg[deg] += 1
-
-        # For each degree k compute the value of P(k)
-        for deg in dict_occ_deg:
-            dict_pk[deg] = dict_occ_deg[deg] / nb_musician
-            lst_deg.append(deg)
-            lst_pk.append(dict_pk[deg])
-
-        fig = plt.figure()
-        plt.plot(lst_deg, lst_pk, '.')
-        plt.xlabel('k', fontsize=12)
-        plt.ylabel('P(k)', fontsize=12)
-        plt.gca().invert_yaxis()
-        fig.savefig('distrib_pk.png')
-        plt.show()
-
-        # For each degree k compute the value of gamma
-        for deg in dict_occ_deg:
-            if(deg != 0 and deg != 1 and dict_pk[deg] != 0):
-                dict_deg_gamma[deg] = math.log(Decimal(1/dict_pk[deg]),deg)
-        avg_gamma = 0
-
-        # Compute the average value of gamma for the degree present in the network
-        for deg in dict_deg_gamma:
-            avg_gamma += dict_deg_gamma[deg]
-        avg_gamma = avg_gamma/len(dict_deg_gamma)
-        print("Average value of gamma : ", avg_gamma)
-
-    ## TODO : move to 'gui'
-
-    def show_rich_club_distrib(self):
-        rc = nx.rich_club_coefficient(self.G, normalized=True, Q=100)
-        lst_deg = []
-        lst_rc_coef = []
-        total_rc = 0
-        for deg in rc:
-            lst_deg.append(deg)
-            lst_rc_coef.append(rc[deg])
-            total_rc += rc[deg]
-
-        print("Average rich-club coef : ", total_rc/len(rc))
-
-        fig = plt.figure()
-        plt.plot(lst_deg, lst_rc_coef, 'o-')
-        fig.suptitle('Rich-club coefficient by degree', fontsize=16)
-        plt.xlabel('Degree', fontsize=12)
-        plt.ylabel('Rich-club coefficient', fontsize=12)
-        plt.show()
-
-    ## TODO : move to 'gui'
-
-    def show_occurence(self):
-        occ, deg, nb_musician = self.computeoccudeg()
-        fig = plt.figure()
-        plt.plot(deg, occ, 'o-')
-        fig.suptitle('Number of node by degree', fontsize=16)
-        plt.xlabel('Degree', fontsize=12)
-        plt.ylabel('Occurence', fontsize=12)
-        fig.savefig('occurence.png')
-        plt.show()
-
-
-    ## TODO : move to 'gui'
-    # Function from https://stackoverflow.com/questions/64485434/how-to-plot-the-distribution-of-a-graphs-clustering-coefficient
-    def show_clustering(self):
-        gc = self.G.subgraph(max(nx.connected_components(self.G)))
-        lcc = nx.clustering(gc)
-        cmap = plt.get_cmap('autumn')
-        norm = plt.Normalize(0, max(lcc.values()))
-        node_colors = [cmap(norm(lcc[node])) for node in gc.nodes]
-        fig, (ax1, ax2) = plt.subplots(ncols=2, figsize=(12, 4))
-        nx.draw_spring(gc, node_size=5, node_color=node_colors, with_labels=False, ax=ax1, edge_color="#bfbfbf")
-        fig.colorbar(ScalarMappable(cmap=cmap, norm=norm), label='Clustering', shrink=0.95, ax=ax1)
-        ax2.hist(lcc.values(), bins=10)
-        ax2.set_xlabel('Clustering')
-        ax2.set_ylabel('Frequency')
-
-        plt.tight_layout()
-        plt.show()
-
-    ## TODO : move to 'gui'
-    # TODO : General, dessiner uniquement un seul des deux liens, éviter les doublons !
-    def show_community(self, simple_view = False):
-        G_mul = nx.MultiDiGraph()
-        G_mul = self.G.to_directed()
-        d = dict(self.G.degree)
-        fig, ax = plt.subplots(figsize=(10, 6),  dpi=600)
-        edges = self.G.edges()
-        weights = [math.sqrt(self.G[u][v]['weight'])/4 for u,v in edges]
-        partition = community_louvain.best_partition(self.G)
-
-        pos = nx.spring_layout(self.G, 2/math.sqrt(self.G.order())) #k=5/math.sqrt(self.G.order())
-        #twilight_shifted
-        cmap = cm.get_cmap("twilight_shifted", max(partition.values()) + 1)
-
-        # color map pour les edges avec une valeur alpha
-        edgemap = cmap(np.arange(cmap.N))
-        edgemap[:,-1] = np.linspace(0.5, 1, cmap.N)
-        edgemap = ListedColormap(edgemap)
-
-        # Pour avoir les edges de la même couleur que les communautés
-        cedges = []
-        for node in self.G.nodes():
-            for edge in self.G.edges(node):
-                cedges.append(partition[edge[1]])
-
-        if(simple_view):
-            nx.draw_networkx(G_mul, pos=pos, cmap=cmap, node_size=0.1, node_color=list(partition.values()), edge_color="#EEEEEE", with_labels=False, width=0.1, arrows=False)
-        else:
-            #nx.draw_networkx_nodes(G_mul, pos=pos, node_size=[v * 5 for v in d.values()], cmap=cmap, node_color=list(partition.values()), linewidths=0)
-            #nx.draw_networkx_edges(G_mul, pos=pos, edge_cmap=cmap, edge_color=cedges, width=weights, connectionstyle=f'arc3,rad=0.2', arrowstyle='-', alpha=0.5, arrowsize = 0.1, min_target_margin=0)
-            #nx.draw_networkx_labels(G_mul, pos=pos, font_size=2.5, font_color='white')
-
-            #Idem que les trois ligne au dessus mais sans les edges en trans et sans bug de edges
-            nx.draw_networkx(G_mul, pos=pos, node_size=[v * 0.01 for v in d.values()], cmap=cmap, node_color=list(partition.values()) , edge_cmap=edgemap, edge_color=cedges, width=weights, connectionstyle=f'arc3,rad=0.2', style='solid', arrowstyle='-', with_labels=False, font_size = 0.5, font_color = "white")
-            # linewidths=0.2, edgecolors='black'
-
-        ax.axis('off')
-        fig.set_facecolor('black')
-        #plt.savefig("community.png")
-        plt.show()
-
-    ## TODO : move to 'video'
     def show_dynamic_network(self, time, draw = False):
         V = vid.Video()
         folder = "../data/tmp_vid/"
@@ -395,29 +290,3 @@ class Network:
         plt.show()
         if(draw):
             V.create_video_from_imgs(folder, "test")
-
-
-    ## TODO : move to 'gui'
-    def show_network(self, make_circular = False, instru = False):
-        if(make_circular):
-            pos = nx.circular_layout(self.G)
-        else:
-            pos = nx.spring_layout(self.G, 2/math.sqrt(self.G.order()))
-
-        d = dict(self.G.degree)
-        H = nx.Graph(self.G)
-        edges = H.edges()
-        if(instru):
-            color_lookup = {k:v for v, k in enumerate(sorted(set(H.nodes())))}
-            low, *_, high = sorted(color_lookup.values())
-            norm = colors.Normalize(vmin=low, vmax=high, clip=True)
-            mapper = cm.ScalarMappable(norm=norm, cmap=cm.tab20c) #magma
-
-            weights = [1/H[u][v]['weight']*1000 for u,v in edges]
-            nx.draw_networkx(H, pos=pos, node_size=[(1/(v+1))*5000000 for v in d.values()], width=weights, node_color=[mapper.to_rgba(i) for i in color_lookup.values()], edge_color="grey", with_labels=True, font_size = 7, font_color = "#303030")
-        else:
-            weights = [H[u][v]['weight'] for u,v in edges]
-            nx.draw_networkx(G_mul, pos=pos, node_size=[(v+1) * 0.01 for v in d.values()], cmap=cmap, node_color ="#5792ad", edge_color="grey", width=weights, with_labels=True, font_size = 0.5, font_color = "white")
-        plt.axis('off')
-        plt.savefig("network.png")
-        #plt.show()

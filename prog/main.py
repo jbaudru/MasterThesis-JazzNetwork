@@ -1,5 +1,6 @@
 import network as n
-import data_parser as p
+import utility as util
+import gui as ui
 
 """
 # OUTPUT : FESTIVAL
@@ -58,284 +59,62 @@ Duke Ellington  :  154
 
 def main():
     G = n.Network()
-
+    uti = util.Utility()
+    
     lst_data_set_album = "../data/data_album_wikipedia.csv"
-
     lst_data_set_montreux = "../data/dataset_live_montreux.csv"
 
-
-    print('==========================================')
-
     print('1.1 - Creating datastructure')
-    dic_mus_collab, dic_mus_year_collab = get_dic_from_datasets(lst_data_set_montreux)
+    dic_mus_collab, dic_mus_year_collab = uti.get_dic_from_datasets(lst_data_set_montreux)
     #print('1.2 - Sorting data sets.')
-    #dic_mus_collab, dic_mus_year_collab = sort_dict_by_year(dic_mus_collab, dic_mus_year_collab)
-
+    #dic_mus_collab, dic_mus_year_collab = uti.sort_dict_by_year(dic_mus_collab, dic_mus_year_collab)
 
     print('2 - Building nodes.')
-    create_node(dic_mus_collab, G)
+    G.create_node(dic_mus_collab)
 
     #print('2.2 - Creating musicians data sets.')
     #G.create_csv_musician()
 
     print('3.1 - Building weighted edges.')
-    pds = comput_weight(dic_mus_collab, G)
-    dic_instru_mus = create_edge(dic_mus_collab, pds, G, True)
+    pds = G.comput_weight(dic_mus_collab)
+    dic_instru_mus = G.create_edge(dic_mus_collab, pds)
+
+    print("clean memory")
+    dic_mus_collab.clear()
+    pds.clear()
+    #G.clear()
 
     print('4 - Drawing.')
     H = n.Network(True)
-    create_node(dic_instru_mus, H)
-    pds2 = comput_weight_instru(dic_instru_mus, H)
+    H.create_node(dic_instru_mus)
+    pds2 = H.comput_weight_instru(dic_instru_mus)
+    H.create_edge_instru(dic_instru_mus, pds2)
 
-    create_edge_instru(dic_instru_mus, pds2, H)
-    H.show_network(True, True)
-    #H.printInfo(10, False, False)
+    interface = ui.Gui(H)
+    #interface.show_info(10, False, False)
+    #interface.show_network(True, True)
+    interface.show_community(True)
+
+
 
     #print('3.2 - Building dynamic edges.')
-    #create_dynamic_edge(dic_mus_collab, G, dic_mus_year_collab)
+    #G.create_dynamic_edge(dic_mus_collab, G, dic_mus_year_collab)
 
     #print('4 - Drawing.')
-    #H.show_network(False, False)
-    #G.show_network(False, True)
-    #G.show_community(False) # ouvrir le fichier, pas juste previsu
-    #G.show_occurence()
-    #G.show_clustering()
+    #interface = ui.Gui(G)
+    #interface.show_network(False, False)
+    #interface.show_community(False) # ouvrir le fichier, pas juste previsu
+    #interface.show_occurence()
+    #interface.show_clustering()
+
     #G.get_gamma_value()
-    #G.show_rich_club_distrib()
-    #G.show_distrib_pk()
-    #G.show_dynamic_network(dic_mus_year_collab, False)
+    #interface.show_rich_club_distrib()
+    #interface.show_distrib_pk()
+    #interface.show_dynamic_network(dic_mus_year_collab, False)
 
-    #G.printInfo(20, False, False)
-    #G.printInfoDyna(dic_mus_year_collab)
+    #interface.show_info(20, False, False)
     print('==========================================')
-
-
-#================================================================================
-## TODO : move these two fun to new 'utility' class
-
-# Sort musician collab dict the same order than musician year dict
-def sort_dict_by_year(dic_mus_collab, dic_mus_year_collab):
-    new_dict_mus_collab = {}
-    dic_mus_year_collab = {k: v for k, v in sorted(dic_mus_year_collab.items(), key=lambda item: item[1])}
-    for key in dic_mus_year_collab:
-        new_dict_mus_collab[key] = dic_mus_collab[key]
-
-    return new_dict_mus_collab, dic_mus_year_collab
-
-
-# Combine the different dict create from the different dataset
-# And return 2 dict {album:year} and {album: lst_musician+(instrument)}
-def get_dic_from_datasets(dataset):
-    dic_mus_collab = {}
-    dic_mus_year_collab = {}
-    P = p.Parser(dataset)
-    P.parse_csv()
-
-    dic_mus_collab_tmp = P.get_dict_musician_alb()
-    dic_mus_collab.update(dic_mus_collab_tmp)
-
-    dic_mus_year_collab_tmp = P.get_dict_year()
-    dic_mus_year_collab.update(dic_mus_year_collab_tmp)
-
-    return dic_mus_collab, dic_mus_year_collab
-
-
-#================================================================================
-## TODO Move to network class
-
-## TODO : must be OPTIMIZE
-
-# Create all the node
-def create_node(dic_alb_musician, G):
-    dic_instru_mus = {}
-    for k in dic_alb_musician:
-        for musician in dic_alb_musician[k]:
-            if(musician != "" and musician != " " and len(musician) > 2):
-
-                musician_name, musician_instru = get_name_and_instru(musician)
-                musician_name = clean_musician_name_unicode(musician_name)
-
-                if("(" not in musician_name and ")" not in musician_name):
-                    G.addnode(musician_name)
-
-
-def get_name_and_instru(musician_dt):
-    if("(" in musician_dt):
-        muscian_data = musician_dt.split("(")
-        musician_name = muscian_data[0]
-        musician_instru = muscian_data[1][:-1]
-    else:
-        musician_name = musician_dt
-        musician_instru = "unknown"
-    return musician_name, musician_instru
-
-
-def clean_musician_name_unicode(musician_name):
-    if("&amp;" in musician_name):
-        ind = musician_name.index("&amp;")
-        musician_name = musician_name[:ind] + "&" + musician_name[ind+5:]
-    return musician_name
-
-
-def filter_instrument(musician_instru):
-    if(len(musician_instru)>1 and ')' in musician_instru):
-        ind = musician_instru.index(")")
-        musician_instru = musician_instru[:ind]
-
-    if("/" in musician_instru):
-        musician_instru = musician_instru.split("/")[0]
-    instrument = "unknown"
-
-    if(musician_instru.lower() in ["bass", "b", "b.", "bas", "electric bas", "electric bass", "acoustic bass", "ba", "bs", "double bass", "basse"]):
-        instrument = "bass"
-    elif(musician_instru.lower() in ["artist", "lead vo", "all voc", "v", "vocalist", "vocal", "voice", "voc.", "voc", "ld voc", "bk voc", "voca", "vocals", "lead vocals", "lead voc", "vo", "chant", "mc" , "m", "choriste", "backing vocals", "backing vocal", "backvocals", "back voc", "singer", "rap", "lead rap"]):
-        instrument = "vocal"
-    elif(musician_instru.lower() in ["batterie", "d", "drums", "drum", "dru", "dr", "steel dr", "jamaica drums"]):
-        instrument = "drum"
-    elif(musician_instru.lower() in ["talking dr", "percu", "timbals", "tim", "bells", "percus", "percussion", "percussi", "percussio", "percussionist", "percussions", "perc.", "per", "perc"]):
-        instrument = "percussion"
-    elif(musician_instru.lower() in ["elg", "cg", "uk", "guitar", "gu", "gui", "bjo", "g", "guitare", "guitars", "guit", "guit.", "guita", "acc.", "acc"]):
-        instrument = "guitar"
-    elif(musician_instru.lower() in ["elp", "piano", "pf", "p.", "synth", "keyboards", "keyboard", "key", "keyb", "kb", "pian", "claviers", "kbds", "kbd", "ke", "keys", "p", "k"]):
-        instrument = "piano/keyboard/synth"
-    elif(musician_instru.lower() in ["trombon", "trombone", "tb"]):
-        instrument = "trombon"
-    elif(musician_instru.lower() in ["vl", "vn", "violin", "violon", "viola", "1st violin", "2nd violin", "1st violi", "2nd violi", "vln", "alto violin", "fiddle"]):
-        instrument = "violin"
-    elif(musician_instru.lower() in ["vc", "cello", "cell"]):
-        instrument = "cello"
-    elif(musician_instru.lower() in ["tuba"]):
-        instrument = "tuba"
-    elif(musician_instru.lower() in ["flut", "flute", "fl", "pc"]):
-        instrument = "flut"
-    elif(musician_instru.lower() in ["french horn", "frh", "horn", "horns"]):
-        instrument = "french horn"
-    elif(musician_instru.lower() in ["clarinet", "oboe", "o", "cl", "fg", "faggoto", "ob"]):
-        instrument = "clarinet"
-    elif(musician_instru.lower() in ["bassoon"]):
-        instrument = "bassoon"
-    elif(musician_instru.lower() in ["organ", "hammond organ", "or"]):
-        instrument = "organ"
-    elif(musician_instru.lower() in ["tub", "tuba"]):
-        instrument = "tuba"
-    elif(musician_instru.lower() in ["cuivre"]):
-        instrument = "cuivre"
-    elif(musician_instru.lower() in ["string", "strings"]):
-        instrument = "strings"
-    elif(musician_instru.lower() in ["trumpet", "tr", "trumpe", "t", "tp", "tp."]):
-        instrument = "trumpet"
-    elif(musician_instru.lower() in ["s", "s.", "ss", "ss.", "ts", "ts.", "as", "as.", "bs", "bs.", "sax", "saxe", "saxes", "saxophone", "saxophon", "sa", "saxo", "baritone sax", "tenor sax", "tenor sa", "alto sax", "tenor saxophone", "baritone saxophone", "bar"]):
-        instrument = "saxophone"
-    elif(musician_instru.lower() in ["hca", "hc","harmonica", "harmonic"]):
-        instrument = "harmonica"
-    elif(musician_instru.lower() in ["bandoneon"]):
-        instrument = "bandoneon"
-    elif(musician_instru.lower() in ["accordio", "accordion", "pac"]):
-        instrument = "accordion"
-    elif(musician_instru.lower() in ["n'goni", "kora"]):
-        instrument = "n'goni"
-    elif(musician_instru.lower() in ["dj", "sampler", "turntab", "turntabl", "turntables", "tabl", "turntable", "laptop/ad", "laptop"]):
-        instrument = "dj/laptop/sampler"
-
-    """
-    else:
-        if(musician_instru.lower() != "" and musician_instru.lower() != "unknown"):
-            print(musician_instru.lower())
-    """
-
-    return instrument
-
-## TODO : must be OPTIMIZE
-
-def create_edge_instru(dic, pds, G):
-    for keyinstru in dic:
-        for instru in dic[keyinstru]:
-            if(instru != keyinstru):
-                G.addedgeweight(keyinstru, instru, pds[keyinstru][instru])
-
-
-# Build edges between nodes
-def create_edge(dic_alb_musician, dict_pds, G, create_dic_instru = False):
-    dic_instru_mus = {}
-    for k in dic_alb_musician:
-        for kk in dic_alb_musician:
-            if(k != kk):
-                for musician in dic_alb_musician[k]:
-                    for musician2 in dic_alb_musician[k]:
-                        if(musician != musician2):
-                            if(musician != "" and musician != " " and len(musician) > 2):
-                                if(musician2 != "" and musician2 != " " and len(musician2) > 2):
-                                    musician_name, musician_instru = get_name_and_instru(musician)
-                                    musician_name = clean_musician_name_unicode(musician_name)
-
-                                    musician2_name, musician2_instru = get_name_and_instru(musician2)
-                                    musician2_name = clean_musician_name_unicode(musician2_name)
-
-                                    if("(" not in musician_name and ")" not in musician_name and "(" not in musician2_name and ")" not in musician2_name):
-                                        G.addedgeweight(musician_name, musician2_name, dict_pds[musician][musician2])
-
-                                        if(create_dic_instru):
-                                            instrument = filter_instrument(musician_instru)
-                                            instrument2 = filter_instrument(musician2_instru)
-
-                                            # add to dico instrument
-                                            if(instrument != "unknown" and instrument2 != "unknown"):
-                                                if(instrument not in dic_instru_mus):
-                                                    dic_instru_mus[instrument] = [instrument2]
-                                                else:
-                                                    dic_instru_mus[instrument].append(instrument2)
-    return dic_instru_mus
-
-## TODO : must be OPTIMIZE
-
-def create_dynamic_edge(dic_alb_musician, G, dic_mus_year_collab):
-    for k in dic_alb_musician:
-        for kk in dic_alb_musician:
-            if(k != kk):
-                if(str(dic_mus_year_collab[k]).isnumeric()):
-                    time = int(dic_mus_year_collab[k])
-                    for musician in dic_alb_musician[k]:
-                        for musician2 in dic_alb_musician[k]:
-                            if(musician != musician2):
-                                if(musician != "" and musician != " " and len(musician) > 2):
-                                    if(musician2 != "" and musician2 != " " and len(musician2) > 2):
-                                        G.adddynedge(musician, musician2, time)
-
-## TODO : must be OPTIMIZE
-
-def comput_weight_instru(dic_mus_instru, H):
-    dic_pds_edge = {}
-    tmp_instru = {}
-    for instru in dic_mus_instru:
-        tmp_instru[instru] = 0
-    for instru in dic_mus_instru:
-        dic_pds_edge[instru] = tmp_instru.copy()
-    for instru in dic_mus_instru:
-        for inst in dic_mus_instru[instru]:
-            dic_pds_edge[instru][inst] += 1
-
-    return dic_pds_edge
-
-
-# Compute weight of edge between musician
-def comput_weight(dict_alb_musician, G):
-    dic_all_musician_tmp = {}
-    for k in dict_alb_musician:
-        for musician in dict_alb_musician[k]:
-            if(musician not in dic_all_musician_tmp):
-                dic_all_musician_tmp[musician] = 0
-    dic_all_musician = {}
-    for mus in dic_all_musician_tmp:
-        dic_all_musician[mus] = dic_all_musician_tmp.copy()
-    for alb in dict_alb_musician:
-        for musician in dict_alb_musician[alb]:
-            for ms in dict_alb_musician[alb]:
-                if(ms != musician):
-                    dic_all_musician[musician][ms] += 1
-    return dic_all_musician
 
 
 if __name__ == '__main__':
     main()
-
-# https://www.overleaf.com/project/6033b2143f7784b3213378d4
