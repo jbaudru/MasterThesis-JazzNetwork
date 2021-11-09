@@ -1,9 +1,0 @@
-Dataset name;Number of line;Number of musician;Most connected Musician;Max deg;Average deg
-data;163;723;Barney Bigard;57;24.14
-data1;390;196;Dave Koz;6;3
-data2;156;1577;Dizzy Gillespie;250;62.609
-data3;81;828;Duke Ellington;106;38.45
-data4;54;509;Stephane Grappelli;205;51.30
-data5;41;403;Wayne Shorter;119;38.93
-data6;26;403;Luiz Bonfa;162;44.708
-all;911;3.697;Duke Ellington;463;97.11
