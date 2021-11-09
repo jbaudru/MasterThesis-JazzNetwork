@@ -4,8 +4,8 @@ import matplotlib.cm as cm
 
 
 def main():
-    path = "../data/q1_q2_hub.csv"
-    #path = "../data/top_hub.csv"
+    #path = "../data/q1_q2_hub.csv"
+    path = "../data/top_hub.csv"
 
     dict_label = parse_data(path, -3)
     dict_label_occ = count_data(dict_label)

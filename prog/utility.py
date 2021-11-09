@@ -1,5 +1,5 @@
 import data_parser as p
-from ethnicolr import census_ln, pred_census_ln
+from itertools import islice
 import csv
 
 class Utility:
@@ -110,46 +110,33 @@ class Utility:
         return new_dict_mus_collab, dic_mus_year_collab
 
     # Create a database with all the informations on a musician
-    def create_csv_musician(self, network):
-        dict_alb_musician = dict(network.getgraph().degree)
+    def create_csv_musician(self, network, name, tophub = False, n = None):
+        d = dict(network.getgraph().degree)
+        d = {k: v for k, v in sorted(d.items(), key=lambda item: item[1])} # Sort dict in order way
+        if(tophub and n != None):
+            d = dict(list(d.items())[-n:])
+        elif(not tophub and n != None): # q1 and q2
+            d = dict(list(d.items())[len(d)//4:len(d)//2])
+            d = list(islice(d.items(), n))
         path = "../data/"
-        name = path + "muscians.csv"
+        name = path + name + ".csv"
         file = open(name, 'w', newline='')
         spamWriter = csv.writer(file, delimiter=';', quoting=csv.QUOTE_MINIMAL)
 
         lst_mus = []
-        for musician in dict_alb_musician:
+        for musician in d:
+            if(not tophub):
+                deg = musician[1]
+                musician = musician[0]
+            else:
+                deg = d[musician]
             line_in_csv = [musician]
-
-            mus = musician.split(' ')
-            sex = self.GenderD.get_gender(mus[0])
-            line_in_csv.append(sex)
 
             line_in_csv.append("date de naissance")
             line_in_csv.append("instrument")
             line_in_csv.append("country")
 
-            # Get ethnicity with Tensor Flow
-            names = [{'name': mus[0]}]
-            df = pd.DataFrame(names)
-            ethnicity = census_ln(df, 'name').values.tolist()
-            eth = "None"
-            if("nan" not in ethnicity[0][1:]):
-                ethn_pourc = max(ethnicity[0][1:])
-                ind = ethnicity[0].index(ethn_pourc)
-                if(ind == 1):
-                    eth = "White"
-                if(ind == 2):
-                    eth = "Black"
-                if(ind == 3):
-                    eth = "API"
-                if(ind == 4):
-                    eth = "AIAN"
-                if(ind == 5):
-                    eth = "2PRACE"
-                if(ind == 6):
-                    eth = "Hispanic"
-            line_in_csv.append(eth)
+            line_in_csv.append(deg) # degree
 
             if(musician not in lst_mus):
                 spamWriter.writerow(line_in_csv)

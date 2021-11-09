@@ -61,11 +61,11 @@ def main():
     G = n.Network()
     uti = util.Utility()
 
-    lst_data_set_album = "../data/data_album_wikipedia.csv"
-    lst_data_set_montreux = "../data/dataset_live_montreux.csv"
+    lst_data_set = "../data/dataset_album_wikipedia.csv"
+    #lst_data_set = "../data/dataset_live_montreux.csv"
 
     print('1 - Creating datastructure')
-    dic_mus_collab, dic_mus_year_collab = uti.get_dic_from_datasets(lst_data_set_montreux)
+    dic_mus_collab, dic_mus_year_collab = uti.get_dic_from_datasets(lst_data_set)
     #print('1.2 - Sorting data sets.')
     #dic_mus_collab, dic_mus_year_collab = uti.sort_dict_by_year(dic_mus_collab, dic_mus_year_collab)
 
@@ -87,6 +87,7 @@ def main():
     #G.clear()
 
     print('5 - Drawing.')
+    """
     H = n.Network(True)
     H.create_node(dic_instru_mus)
     pds2 = H.comput_weight_instru(dic_instru_mus)
@@ -94,8 +95,11 @@ def main():
     interface = ui.Gui(H)
     interface.show_info(10, False, False)
     interface.show_network(True, True)
+    """
 
-    #interface = ui.Gui(G)
+    uti.create_csv_musician(G, "q1-q2_wiki", False, 50)
+
+    interface = ui.Gui(G)
     #interface.show_network(False, False)
     #interface.show_community(False)
     #interface.show_occurence()
@@ -103,7 +107,7 @@ def main():
     #interface.show_rich_club_distrib()
     #interface.show_distrib_pk()
     #interface.show_dynamic_network(dic_mus_year_collab, False)
-    #interface.show_info(20, False, False)
+    interface.show_info(20, False, False)
 
 
 

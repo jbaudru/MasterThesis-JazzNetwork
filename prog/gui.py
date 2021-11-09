@@ -8,6 +8,7 @@ from matplotlib.colors import ListedColormap
 import community as community_louvain
 import numpy as np
 from decimal import Decimal
+from itertools import islice
 
 import math
 
