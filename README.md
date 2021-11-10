@@ -18,7 +18,7 @@ musicians within a collaborative network ?**
 
 ![alt text](https://raw.githubusercontent.com/jbaudru/MasterThesis-JazzNetwork/main/data/pictures/community.png)
 
-![alt text](https://raw.githubusercontent.com/jbaudru/MasterThesis-JazzNetwork/main/data/pictures/community1.png)
+![alt text](https://raw.githubusercontent.com/jbaudru/MasterThesis-JazzNetwork/main/data/pictures/instrument_connection.png)
 
 
 ## To Do
