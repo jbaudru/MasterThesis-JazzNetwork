@@ -32,23 +32,23 @@ class Utility:
             musician_instru = musician_instru.split("/")[0]
         instrument = "unknown"
 
-        if(musician_instru.lower() in ["bass", "b", "b.", "bas", "electric bas", "electric bass", "acoustic bass", "ba", "bs", "double bass", "basse"]):
+        if(musician_instru.lower() in ["bass", "b", "b.", "contrebasse", "bas", "electric bas", "electric bass", "acoustic bass", "ba", "bs", "double bass", "basse"]):
             instrument = "bass"
-        elif(musician_instru.lower() in ["artist", "lead vo", "all voc", "v", "vocalist", "vocal", "voice", "voc.", "voc", "ld voc", "bk voc", "voca", "vocals", "lead vocals", "lead voc", "vo", "chant", "mc" , "m", "choriste", "backing vocals", "backing vocal", "backvocals", "back voc", "singer", "rap", "lead rap"]):
+        elif(musician_instru.lower() in ["artist", "lead vo", "all voc", "v", "vocalist", "vox", "choeur", "vocal", "voice", "voc.", "voc", "ld voc", "bk voc", "voca", "vocals", "lead vocals", "lead voc", "vo", "chant", "mc" , "m", "choriste", "backing vocals", "backing vocal", "backvocals", "back voc", "singer", "rap", "lead rap"]):
             instrument = "vocal"
         elif(musician_instru.lower() in ["batterie", "d", "drums", "drum", "dru", "dr", "steel dr", "jamaica drums"]):
             instrument = "drum"
         elif(musician_instru.lower() in ["talking dr", "percu", "timbals", "tim", "bells", "percus", "percussion", "percussi", "percussio", "percussionist", "percussions", "perc.", "per", "perc"]):
             instrument = "percussion"
-        elif(musician_instru.lower() in ["elg", "cg", "guitar", "gu", "gui", "bjo", "g", "guitare", "guitars", "guit", "guit.", "guita"]):
+        elif(musician_instru.lower() in ["elg", "cg", "guitar", "gu", "gui", "bjo", "g" ,"g.", "guitare", "guitars", "guit", "guit.", "guita"]):
             instrument = "guitar"
         elif(musician_instru.lower() in ["uk"]):
             instrument = "ukulele"
-        elif(musician_instru.lower() in ["elp", "piano", "pf", "p.", "pian", "p"]):
+        elif(musician_instru.lower() in ["elp", "piano", "pf", "p.", "pian", "p", "el-p"]):
             instrument = "piano"
-        elif(musician_instru.lower() in ["synth", "keyboards", "keyboard", "key", "keyb", "kb", "claviers", "kbds", "kbd", "ke", "keys", "k"]):
+        elif(musician_instru.lower() in ["synth", "keyboards", "keyboard", "key", "keyb", "kb", "claviers", "kbds", "kbd", "ke", "keys", "k", "k."]):
             instrument = "keyboard"
-        elif(musician_instru.lower() in ["trombon", "trombone", "tb"]):
+        elif(musician_instru.lower() in ["trombon", "trombone", "trombones", "tb", "trumbone", "1st trombone", "2nd trombone"]):
             instrument = "trombon"
         elif(musician_instru.lower() in ["vl", "vn", "violin", "violon", "viola", "1st violin", "2nd violin", "1st violi", "2nd violi", "vln", "alto violin", "fiddle"]):
             instrument = "violin"
@@ -58,7 +58,7 @@ class Utility:
             instrument = "tuba"
         elif(musician_instru.lower() in ["flut", "flute", "fl", "pc"]):
             instrument = "flut"
-        elif(musician_instru.lower() in ["french horn", "frh", "horn", "horns"]):
+        elif(musician_instru.lower() in ["french horn", "frh", "horn", "horns", "frenchh"]):
             instrument = "french horn"
         elif(musician_instru.lower() in ["clarinet", "oboe", "o", "cl", "fg", "faggoto", "ob"]):
             instrument = "clarinet"
@@ -68,7 +68,7 @@ class Utility:
             instrument = "organ"
         elif(musician_instru.lower() in ["tub", "tuba"]):
             instrument = "tuba"
-        elif(musician_instru.lower() in ["trumpet", "tr", "trumpe", "t", "tp", "tp."]):
+        elif(musician_instru.lower() in ["trumpet", "tr", "tr.", "trumpe", "t", "tp", "tp."]):
             instrument = "trumpet"
         elif(musician_instru.lower() in ["s", "s.", "ss", "ss.", "ts", "ts.", "as", "as.", "bs", "bs.", "sax", "saxe", "saxes", "saxophone", "saxophon", "sa", "saxo", "baritone sax", "tenor sax", "tenor sa", "alto sax", "tenor saxophone", "baritone saxophone", "bar"]):
             instrument = "saxophone"
@@ -82,11 +82,14 @@ class Utility:
             instrument = "n'goni"
         elif(musician_instru.lower() in ["dj", "sampler", "turntab", "turntabl", "turntables", "tabl", "turntable", "laptop/ad", "laptop"]):
             instrument = "dj/laptop"
-        """
+        elif(musician_instru.lower() in ["conductor", "cond"]):
+            instrument = "conductor"
+        elif(musician_instru.lower() in ["harp"]):
+            instrument = "harp"
         else:
             if(musician_instru.lower() != "" and musician_instru.lower() != "unknown"):
                 print(musician_instru.lower())
-        """
+
         return instrument
 
     # And return 2 dict {album:year} and {album: lst_musician+(instrument)}

@@ -1,22 +1,48 @@
 import csv
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
-
+import numpy as np
 
 def main():
-    #path = "../data/q1_q2_hub.csv"
-    path = "../data/top_hub.csv"
+    #path = "../data/q1-q2_montreux.csv"
+    #path = "../data/q1-q2_wiki.csv"
+    #path = "../data/top_hub_montreux.csv"
+    path = "../data/top_hub_wiki.csv"
 
-    dict_label = parse_data(path, -3)
-    dict_label_occ = count_data(dict_label)
+    data= parse_data(path, -1)
+    dict_label_occ = count_data(data)
     lst_x, lst_y = dict_to_lst(dict_label_occ)
     print(len(dict_label_occ))
-    show_data("Label","Count", lst_x, lst_y)
+    show_data("City","Count", lst_x, lst_y)
 
-    dict_style = parse_data(path, -2)
-    dict_style_occ = count_data(dict_style)
-    lst_x, lst_y = dict_to_lst(dict_style_occ)
-    show_data("Genre","Count", lst_x, lst_y)
+    data= parse_data(path, -2)
+    dict_label_occ = count_data(data)
+    lst_x, lst_y = dict_to_lst(dict_label_occ)
+    print(len(dict_label_occ))
+    show_data("Sex","Count", lst_x, lst_y)
+
+    data= parse_data(path, -4)
+    dict_label_occ = count_data(data)
+    lst_x, lst_y = dict_to_lst(dict_label_occ)
+    print(len(dict_label_occ))
+    show_data("Country","Count", lst_x, lst_y)
+
+    data= parse_data(path, -5)
+    dict_label_occ = count_data(data)
+    lst_x, lst_y = dict_to_lst(dict_label_occ)
+    print(len(dict_label_occ))
+    show_data("Instrument","Count", lst_x, lst_y)
+
+    data= parse_data(path, -6)
+    dict_label_occ = count_data(data)
+    lst_x, lst_y = dict_to_lst(dict_label_occ)
+    print(len(dict_label_occ))
+    show_data("Year","Count", lst_x, lst_y)
+    sum_year = 0
+    for i in range(0,len(lst_x)):
+        sum_year += int(lst_x[i])
+    print("Average birth year : ", sum_year/len(lst_x))
+
 
 def count_data(dict):
     data_counter = {}
@@ -43,11 +69,24 @@ def dict_to_lst(dict):
 
 def show_data(x_label, y_label, lst_x, lst_y):
     fig = plt.figure()
-    plt.barh(lst_x, lst_y)
-    plt.xlabel(y_label, fontsize=12)
-    plt.ylabel(x_label, fontsize=12)
+
+    colors =  plt.cm.tab20c( (4./3*np.arange(20*3/4)).astype(int) )
+    colors = colors.tolist()[:len(lst_y)]
+
+    nw_col = []
+    for i in range(0, len(colors)):
+        tuple = (colors[i][0], colors[i][1], colors[i][2], colors[i][3])
+        nw_col.append(tuple)
+
+    nw_col += nw_col
+    nw_col = nw_col[:len(lst_y)]
+
+    plt.style.use('seaborn-dark')
+    plt.barh(lst_x, lst_y, color=colors)
+    plt.xlabel(y_label, fontsize=10)
+    plt.ylabel(x_label, fontsize=10)
     plt.yticks(fontsize=7)
-    fig.savefig('top_hub_stat.png')
+    #fig.savefig('top_hub_stat.png')
     plt.show()
 
 

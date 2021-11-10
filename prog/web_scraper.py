@@ -34,7 +34,7 @@ def main():
     print("Building dataset #6")
     web_scrapping_site_4(filter, "https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Album_de_bossa_nova", "data6.csv", "mw-category", "class")
     print('==========================================')
-    
+
 
     """
     #WEBSCRAPPING MONTREUX

@@ -1,50 +1,50 @@
-Philly Joe Jones;date de naissance;instrument;country;30
-Stan Getz;date de naissance;instrument;country;31
-Charles Mingus;date de naissance;instrument;country;31
-Cat Anderson;date de naissance;instrument;country;31
-Britt Woodman;date de naissance;instrument;country;31
-Russell Procope;date de naissance;instrument;country;31
-Jimmy Hamilton;date de naissance;instrument;country;31
-Paul Gonsalves;date de naissance;instrument;country;31
-Jimmy Woode;date de naissance;instrument;country;31
-Zoot Sims;date de naissance;instrument;country;31
-Herb Ellis;date de naissance;instrument;country;31
-Booty Wood;date de naissance;instrument;country;31
-Bob Northern;date de naissance;instrument;country;32
-Rufus Jones;date de naissance;instrument;country;32
-Joe Benjamin;date de naissance;instrument;country;34
-Roswell Rudd;date de naissance;instrument;country;34
-Al McKibbon;date de naissance;instrument;country;34
-Kenny Clarke;date de naissance;instrument;country;34
-Wayne Shorter;date de naissance;instrument;country;36
-Thad Jones;date de naissance;instrument;country;36
-Don Cherry;date de naissance;instrument;country;37
-Milt Hinton;date de naissance;instrument;country;37
-Clark Terry;date de naissance;instrument;country;37
-Louis Armstrong;date de naissance;instrument;country;38
-Gil Evans;date de naissance;instrument;country;39
-Wynton Kelly;date de naissance;instrument;country;39
-Paul Chambers;date de naissance;instrument;country;40
-Chuck Wayne;date de naissance;instrument;country;40
-Red Norvo;date de naissance;instrument;country;40
-Jo Jones;date de naissance;instrument;country;40
-Quentin Jackson;date de naissance;instrument;country;41
-Elvin Jones;date de naissance;instrument;country;42
-Cootie Williams;date de naissance;instrument;country;42
-Ernie Royal;date de naissance;instrument;country;44
-John Lewis;date de naissance;instrument;country;44
-John Swenson;date de naissance;instrument;country;44
-Ron Carter;date de naissance;instrument;country;45
-Ray Nance;date de naissance;instrument;country;45
-Harry Carney;date de naissance;instrument;country;45
-Ben Webster;date de naissance;instrument;country;47
-Johnny Coles;date de naissance;instrument;country;48
-Sonny Rollins;date de naissance;instrument;country;49
-George Russell;date de naissance;instrument;country;50
-Miles Davis;date de naissance;instrument;country;51
-Roy Eldridge;date de naissance;instrument;country;55
-Barney Bigard;date de naissance;instrument;country;57
-Eric Dolphy;date de naissance;instrument;country;58
-Johnny Griffin;date de naissance;instrument;country;60
-Johnny Hodges;date de naissance;instrument;country;74
-Duke Ellington;date de naissance;instrument;country;154
+Billie Holiday;1915;voice;USA;30;f;Philadelphia
+Herb Ellis;1921;guitar;USA;31;m;Fermersville
+Zoot Sims;1925;saxophone;USA;31;m;Inglewood
+Booty Wood;1919;trombon;USA;31;m;
+Stan Getz;1927;saxophone;USA;31;m;Philadelphia
+Charles Mingus;1922;piano;USA;31;m;Nogales
+Cat Anderson;1916;trumpet;USA;31;m;Greenville
+Britt Woodman;1920;trombon;USA;31;m;Los Angeles
+Russell Procope;1908;clarinet;USA;31;m;New York
+Jimmy Hamilton;1917;clarinet;USA;31;m;Dillon
+Paul Gonsalves;1920;saxophone;USA;31;m;Brockton
+Jimmy Woode;1926;bass;USA;31;m;Philadelphia
+Rufus Jones;1936;drums;USA;32;m;Charleston
+Bob Northern;1934;french horn;USA;32;m;New York
+Bud Powell;1924;piano;USA;33;m;New York
+Roswell Rudd;1935;trombon;USA;34;m;Sharon
+Joe Benjamin;1919;bass;USA;34;m;Atlantic City
+Al McKibbon;1919;bass;USA;34;m;Chicago
+Kenny Clarke;1914;drums;USA;34;m;Pittsburgh
+Wayne Shorter;1933;saxophone;USA;36;m;Newark
+Thad Jones;1923;trumpet;USA;36;m;Pontiac
+Don Cherry;1936;trumpet;USA;37;m;Oklahoma City
+Milt Hinton;1910;bass;USA;37;m;Vicksburg
+Clark Terry;1920;trumpet;USA;37;m;Saint Louis
+Louis Armstrong;1901;trumpet;USA;38;m;New Orleans
+Wynton Kelly;1931;piano;USA;39;m;Brooklyn
+Gil Evans;1912;piano;Canada;39;m;Toronto
+Jo Jones;1911;drums;USA;40;m;Chicago
+Paul Chambers;1935;bass;USA;40;m;Pittsburgh
+Chuck Wayne;1923;guitar;USA;40;m;New York
+Red Norvo;1908;vibraphone;USA;40;m;Breadstown
+Quentin Jackson;1909;trombon;USA;41;m;Springfield
+Elvin Jones;1927;drums;USA;42;m;Pontiac
+Cootie Williams;1911;trumpet;USA;42;m;Mobile
+Ernie Royal;1921;trumpet;USA;44;m;Los Angeles
+Ron Carter;1937;bass;USA;45;m;Ferndale
+Ray Nance;1913;trumpet;USA;45;m;Chicago
+Harry Carney;1910;saxophone;USA;45;m;Boston
+Ben Webster;1909;saxophone;USA;46;m;Kansas City
+John Lewis;1920;piano;USA;47;m;La Grange
+Johnny Coles;1926;trumpet;USA;48;m;Trenton
+George Russell;1923;piano;USA;50;m;Cincinnati
+Sonny Rollins;1930;saxophone;USA;51;m;New York
+Miles Davis;1926;trumpet;USA;51;m;Alton
+Roy Eldridge;1911;trumpet;USA;54;m;Pittsburgh
+Barney Bigard;1906;clarinet;USA;57;m;New Orleans
+Eric Dolphy;1928;saxophone;USA;58;m;Los Angeles
+Johnny Griffin;1928;saxophone;USA;60;m;Chicago
+Johnny Hodges;1907;saxophone;USA;74;m;Cambridge
+Duke Ellington;1899;piano;USA;153;m;Washington

@@ -61,8 +61,8 @@ def main():
     G = n.Network()
     uti = util.Utility()
 
-    lst_data_set = "../data/dataset_album_wikipedia.csv"
-    #lst_data_set = "../data/dataset_live_montreux.csv"
+    #lst_data_set = "../data/dataset_album_wikipedia.csv"
+    lst_data_set = "../data/dataset_live_montreux.csv"
 
     print('1 - Creating datastructure')
     dic_mus_collab, dic_mus_year_collab = uti.get_dic_from_datasets(lst_data_set)
@@ -97,7 +97,7 @@ def main():
     interface.show_network(True, True)
     """
 
-    uti.create_csv_musician(G, "q1-q2_wiki", False, 50)
+    #uti.create_csv_musician(G, "top_hub_montreux", True, 100)
 
     interface = ui.Gui(G)
     #interface.show_network(False, False)
