@@ -49,6 +49,9 @@ class Network:
 
     def getedges(self):
         return self.G.edges()
+    
+    def getorder(self):
+        return self.G.order()
 
     def getgraph(self):
         return self.G

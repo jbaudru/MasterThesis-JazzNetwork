@@ -53,7 +53,7 @@ class Gui:
         if(make_circular):
             pos = nx.circular_layout(self.network.getgraph())
         else:
-            pos = nx.spring_layout(self.network.getgraph(), 2/math.sqrt(self.network.order()))
+            pos = nx.spring_layout(self.network.getgraph(), 2/math.sqrt(self.network.getorder()))
         d = dict(self.network.getdegree())
         H = nx.Graph(self.network.getgraph())
         edges = H.edges()

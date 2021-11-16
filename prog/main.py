@@ -1,6 +1,7 @@
 import network as n
 import utility as util
 import gui as ui
+import tophubstat as ths
 
 """
 # OUTPUT : FESTIVAL
@@ -58,11 +59,12 @@ Duke Ellington  :  154
 
 
 def main():
+    """
     G = n.Network()
     uti = util.Utility()
 
-    #lst_data_set = "../data/dataset_album_wikipedia.csv"
-    lst_data_set = "../data/dataset_live_montreux.csv"
+    lst_data_set = "../data/dataset_album_wikipedia.csv"
+    #lst_data_set = "../data/dataset_live_montreux.csv"
 
     print('1 - Creating datastructure')
     dic_mus_collab, dic_mus_year_collab = uti.get_dic_from_datasets(lst_data_set)
@@ -88,6 +90,8 @@ def main():
 
     print('5 - Drawing.')
     """
+
+    """
     H = n.Network(True)
     H.create_node(dic_instru_mus)
     pds2 = H.comput_weight_instru(dic_instru_mus)
@@ -98,9 +102,14 @@ def main():
     """
 
     #uti.create_csv_musician(G, "top_hub_montreux", True, 100)
+    tophubstat = ths.TopHubStat("../data/top_hub_montreux.csv")
+    #tophubstat = ths.TopHubStat("../data/top_hub_wiki.csv")
+    tophubstat.getdictInstru()
+    tophubstat.showInstru()
 
+    """
     interface = ui.Gui(G)
-    #interface.show_network(False, False)
+    interface.show_network(False, False)
     #interface.show_community(False)
     #interface.show_occurence()
     #interface.show_clustering()
@@ -108,7 +117,7 @@ def main():
     #interface.show_distrib_pk()
     #interface.show_dynamic_network(dic_mus_year_collab, False)
     interface.show_info(20, False, False)
-
+    """
 
 
 if __name__ == '__main__':

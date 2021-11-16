@@ -86,10 +86,11 @@ class Utility:
             instrument = "conductor"
         elif(musician_instru.lower() in ["harp"]):
             instrument = "harp"
+        """
         else:
             if(musician_instru.lower() != "" and musician_instru.lower() != "unknown"):
                 print(musician_instru.lower())
-
+        """
         return instrument
 
     # And return 2 dict {album:year} and {album: lst_musician+(instrument)}
