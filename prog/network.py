@@ -6,8 +6,6 @@ import dynetx as dn
 import numpy as np
 import pandas as pd
 
-import math
-import random
 import powerlaw
 
 
@@ -49,7 +47,7 @@ class Network:
 
     def getedges(self):
         return self.G.edges()
-    
+
     def getorder(self):
         return self.G.order()
 

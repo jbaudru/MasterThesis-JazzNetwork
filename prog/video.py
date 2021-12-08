@@ -1,9 +1,13 @@
 import cv2
-import numpy as np
 import glob
 
 class Video:
     def __init__(self):
+        """Init the video object to compile network over time.
+
+        Keyword arguments:
+        None : 
+        """
         pass
 
     def create_video_from_imgs(self, folder_path, out_name):
