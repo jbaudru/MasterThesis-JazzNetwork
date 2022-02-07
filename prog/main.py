@@ -59,13 +59,13 @@ Duke Ellington  :  154
 
 
 def main():
-    #uti = util.Utility()
-    #lst_data_set = "../data/neworleans_heritage/neworlean.csv"
-    #uti.csv_comma_to_semicolon(lst_data_set, "../data/dataset_neworlean.csv")
-
-
-    G = n.Network()
     uti = util.Utility()
+    lst_data_set = "../data/neworleans_heritage/neworlean.csv"
+    uti.csv_comma_to_semicolon(lst_data_set, "../data/dataset_neworlean.csv")
+
+    """
+    G = n.Network()
+    #uti = util.Utility()
 
     #lst_data_set = "../data/dataset_album_wikipedia.csv"
     lst_data_set = "../data/dataset_live_montreux.csv"
@@ -109,6 +109,7 @@ def main():
     interface.show_network(True, True)
     """
 
+    """
     #uti.create_csv_musician(G, "top_hub_montreux", True, 100)
     tophubstat = ths.TopHubStat("../data/top_hub_montreux.csv")
     #tophubstat = ths.TopHubStat("../data/top_hub_wiki.csv")

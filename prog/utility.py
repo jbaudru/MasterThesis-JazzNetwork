@@ -148,7 +148,18 @@ class Utility:
                         str_musician += lst_musician[i] + ","
                     else:
                         str_musician += lst_musician[i]
+                    str_musician = str_musician.replace(" and ", "")
+                    str_musician = str_musician.replace(" feat.", ",")
+                    str_musician = str_musician.replace(" featuring ", ",")
+                    str_musician = str_musician.replace(" with ", ",")
+                    str_musician = str_musician.replace(" & ", ",")
+                    str_musician = str_musician.replace(" + ", ",")
+                    str_musician = str_musician.replace("\"", "")
+                    str_musician = str_musician.replace(" with guests ", ",")
+                    if(str_musician[0] == "\""):
+                        print("PROBLEM")
 
+                print(str_musician)
 
                 title = lst_musician[0].upper()
                 tmp_lst.append(title)  # Alb name
