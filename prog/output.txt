@@ -1,0 +1,51 @@
+# OUTPUT : FESTIVAL MONTREUX
+==========================================
+Clustering coefficient :  0.9204529908238623
+Transitivity value :  0.7131485284798672
+Number of community :  1166
+Total number of nodes :  13796
+Average degree :  70.67226890756302
+==========================================
+List of most connected nodes and their degree :
+David Sanborn 13  :  152
+Steve Ferrone 13  :  161
+Patti Austin 12  :  169
+Chaka Khan 10  :  187
+Claude Nobs 11  :  211
+Herbie Hancock 14  :  212
+Nathan East 11  :  218
+Toots Thielemans 16  :  220
+George Duke 11  :  276
+Quincy Jones 12  :  280
+==========================================
+
+# OUTPUT : Disque Wikipedia
+==========================================
+Clustering coefficient :  0.8322086688639141
+Transitivity value :  0.6195193487564721
+Number of community :  128
+Total number of nodes :  1573
+Average degree :  29.833333333333332
+==========================================
+List of most connected nodes and their degree :
+Quentin Jackson  :  41
+Cootie Williams  :  42
+Elvin Jones  :  42
+Ernie Royal  :  44
+John Swenson  :  44
+Ray Nance  :  45
+Harry Carney  :  45
+Ron Carter  :  45
+Ben Webster  :  47
+John Lewis  :  47
+Johnny Coles  :  48
+Miles Davis  :  50
+George Russell  :  50
+Sonny Rollins  :  51
+Roy Eldridge  :  55
+Barney Bigard  :  57
+Eric Dolphy  :  58
+Johnny Griffin  :  60
+Johnny Hodges  :  74
+Duke Ellington  :  154
+==========================================

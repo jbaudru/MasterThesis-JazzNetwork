@@ -6,6 +6,8 @@ Creative
 Blue
 Pop
 Jr.
+ Jr.
+Jr."""
  Singers
 Galerie
 Composer

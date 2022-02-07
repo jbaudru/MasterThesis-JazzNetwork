@@ -14,7 +14,7 @@ class Parser:
                 lstmusician = lsttmp[-1].split(",")
                 # Delete useless space and linebreak in the name
                 for i in range(0, len(lstmusician)):
-                    if(lstmusician[i] != ''):
+                    if(lstmusician[i] != '' and lstmusician[i] != ' '):
                         if(lstmusician[i][-1] == ' '):
                             lstmusician[i] = lstmusician[i][:-1]
                         if(lstmusician[i][0] == ' ' or lstmusician[i][0] == '"'):

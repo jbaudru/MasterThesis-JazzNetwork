@@ -118,6 +118,16 @@ class Utility:
     # convert the raw data get from the website (comma)
     # to data set in the format use in this project (semicolon)
     def csv_comma_to_semicolon(self, csv_input, csv_output):
+        filter = []#self.txt_to_lst("../data/filter_words.txt")
+        tmp_lst = self.txt_to_lst("../data/filter_producers.txt")
+        filter.extend(tmp_lst)
+        tmp_lst = self.txt_to_lst("../data/filter_writers.txt")
+        filter.extend(tmp_lst)
+        tmp_lst = self.txt_to_lst("../data/filter_labels.txt")
+        filter.extend(tmp_lst)
+        print(filter)
+
+        # FORMAT :
         # Band name, Year, Musicians
         file = open(csv_input, "r")
         file_out = open(csv_output, 'w')
@@ -145,22 +155,14 @@ class Utility:
                 # filter name
                 for i in range(0,len(lst_musician)):
                     if(i < len(lst_musician)-1):
-                        str_musician += lst_musician[i] + ","
+                        if(self.apply_filter(str_musician, filter)):
+                            str_musician += lst_musician[i] + ","
+                            str_musician = self.clean_data(str_musician)
                     else:
-                        str_musician += lst_musician[i]
-                    str_musician = str_musician.replace(" and ", "")
-                    str_musician = str_musician.replace(" feat.", ",")
-                    str_musician = str_musician.replace(" featuring ", ",")
-                    str_musician = str_musician.replace(" with ", ",")
-                    str_musician = str_musician.replace(" & ", ",")
-                    str_musician = str_musician.replace(" + ", ",")
-                    str_musician = str_musician.replace("\"", "")
-                    str_musician = str_musician.replace(" with guests ", ",")
-                    if(str_musician[0] == "\""):
-                        print("PROBLEM")
-
-                print(str_musician)
-
+                        if(self.apply_filter(str_musician, filter)):
+                            str_musician += lst_musician[i]
+                            str_musician = self.clean_data(str_musician)
+                
                 title = lst_musician[0].upper()
                 tmp_lst.append(title)  # Alb name
                 tmp_lst.insert(1, year)
@@ -168,6 +170,34 @@ class Utility:
                 tmp_lst.insert(3, str_musician)
                 spamWriter.writerow(tmp_lst)
 
+    def apply_filter(self, name, filter):
+        res = True
+        for forbiddenwords in filter:
+            if(forbiddenwords in name):
+                res = False
+                break
+        return res
+
+
+    def clean_data(self, str_musician):
+        str_musician = str_musician.replace(" and ", ",")
+        str_musician = str_musician.replace("Jr.", ",")
+        str_musician = str_musician.replace(" feat.", ",")
+        str_musician = str_musician.replace(" featuring ", ",")
+        str_musician = str_musician.replace(" with ", ",")
+        str_musician = str_musician.replace(" & ", ",")
+        str_musician = str_musician.replace(" + ", ",")
+        str_musician = str_musician.replace("\"", "")
+        str_musician = str_musician.replace(" with guests ", ",")
+        return str_musician
+
+    def txt_to_lst(self, filename):
+        lst = []
+        file = open(filename, 'r')
+        for line in file:
+            line = line.replace('\n', '')
+            lst.append(line)
+        return lst
 
     def is_date(self, string, fuzzy=False):
         if(string.count("-")==2):

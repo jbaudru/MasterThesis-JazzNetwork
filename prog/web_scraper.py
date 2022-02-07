@@ -5,16 +5,21 @@ import csv
 import re
 import unidecode
 
+import utility as util
+
 from bs4 import BeautifulSoup
+
 
 def main():
     print('==========================================')
-    filter = txt_to_lst("../data/filter_words.txt")
-    tmp_lst = txt_to_lst("../data/filter_producers.txt")
+    uti = util.Utility()
+
+    filter = uti.txt_to_lst("../data/filter_words.txt")
+    tmp_lst = uti.txt_to_lst("../data/filter_producers.txt")
     filter.extend(tmp_lst)
-    tmp_lst = txt_to_lst("../data/filter_writers.txt")
+    tmp_lst = uti.txt_to_lst("../data/filter_writers.txt")
     filter.extend(tmp_lst)
-    tmp_lst = txt_to_lst("../data/filter_labels.txt")
+    tmp_lst =uti. txt_to_lst("../data/filter_labels.txt")
     filter.extend(tmp_lst)
     #words_eng = set(nltk.corpus.words.words('en'))
     #filter.extend(words_eng)
@@ -224,15 +229,6 @@ def get_indent_webpage(tmp_lst, spamWriter, filter):
                                 musicians = unidecode.unidecode(musicians)
                                 tmp_lst.insert(3, musicians)  # A faire recherche sur le lien (link)
                                 spamWriter.writerow(tmp_lst)
-
-def txt_to_lst(filename):
-    lst = []
-    file = open(filename, 'r')
-    for line in file:
-        line = line.replace('\n', '')
-        lst.append(line)
-    return lst
-
 
 def get_collaboration_year(text):
     year = "year"
