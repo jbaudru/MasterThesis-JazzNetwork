@@ -59,12 +59,16 @@ Duke Ellington  :  154
 
 
 def main():
-    """
+    #uti = util.Utility()
+    #lst_data_set = "../data/neworleans_heritage/neworlean.csv"
+    #uti.csv_comma_to_semicolon(lst_data_set, "../data/dataset_neworlean.csv")
+
+
     G = n.Network()
     uti = util.Utility()
 
-    lst_data_set = "../data/dataset_album_wikipedia.csv"
-    #lst_data_set = "../data/dataset_live_montreux.csv"
+    #lst_data_set = "../data/dataset_album_wikipedia.csv"
+    lst_data_set = "../data/dataset_live_montreux.csv"
 
     print('1 - Creating datastructure')
     dic_mus_collab, dic_mus_year_collab = uti.get_dic_from_datasets(lst_data_set)
@@ -89,9 +93,13 @@ def main():
     #G.clear()
 
     print('5 - Drawing.')
-    """
+    #interface = ui.Gui(G)
+    #interface.show_network(False, False)
+    #interface.show_info(20, False, False)
+    #interface.show_community(False)
+    #interface.show_occurence()
 
-    """
+
     H = n.Network(True)
     H.create_node(dic_instru_mus)
     pds2 = H.comput_weight_instru(dic_instru_mus)
@@ -107,11 +115,10 @@ def main():
     tophubstat.getdictInstru()
     tophubstat.showInstru()
 
-    """
+
     interface = ui.Gui(G)
     interface.show_network(False, False)
     #interface.show_community(False)
-    #interface.show_occurence()
     #interface.show_clustering()
     #interface.show_rich_club_distrib()
     #interface.show_distrib_pk()

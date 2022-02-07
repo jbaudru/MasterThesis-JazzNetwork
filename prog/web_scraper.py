@@ -23,6 +23,7 @@ def main():
 
 
     #WEBSCRAPPING WIKI
+    """
     print("Building dataset #2")
     web_scrapping_site_2(filter, "https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Album_de_jazz", "data2.csv", "mw-category-group", "class" )
     print("Building dataset #3")
@@ -34,7 +35,7 @@ def main():
     print("Building dataset #6")
     web_scrapping_site_4(filter, "https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Album_de_bossa_nova", "data6.csv", "mw-category", "class")
     print('==========================================')
-
+    """
 
     """
     #WEBSCRAPPING MONTREUX
@@ -223,7 +224,6 @@ def get_indent_webpage(tmp_lst, spamWriter, filter):
                                 musicians = unidecode.unidecode(musicians)
                                 tmp_lst.insert(3, musicians)  # A faire recherche sur le lien (link)
                                 spamWriter.writerow(tmp_lst)
-
 
 def txt_to_lst(filename):
     lst = []

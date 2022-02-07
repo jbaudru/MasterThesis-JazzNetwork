@@ -58,16 +58,19 @@ class Gui:
         H = nx.Graph(self.network.getgraph())
         edges = H.edges()
         if(instru):
+            fig, ax = plt.subplots(figsize=(10, 10),  dpi=600)
             color_lookup = {k:v for v, k in enumerate(sorted(set(H.nodes())))}
             low, *_, high = sorted(color_lookup.values())
             norm = colors.Normalize(vmin=low, vmax=high, clip=True)
             mapper = cm.ScalarMappable(norm=norm, cmap=cm.tab20c) #magma
 
-            weights = [H[u][v]['weight']/200 for u,v in edges]
-            nx.draw_networkx(H, pos=pos, node_size=[(v+1)/8 for v in d.values()], width=weights, node_color=[mapper.to_rgba(i) for i in color_lookup.values()], edge_color="#CBCBCB", with_labels=True, font_size = 10, font_color = "#303030")
+            weights = [H[u][v]['weight']/800 for u,v in edges]
+            nx.draw_networkx(H, pos=pos, node_size=[(v+1)/200 for v in d.values()], width=weights, node_color=[mapper.to_rgba(i) for i in color_lookup.values()], edge_color="#ffffff", alpha=0.7, with_labels=True, font_size = 2, font_color = "#393939")
+            fig.set_facecolor('#8189A2')
         else:
-            weights = [H[u][v]['weight'] for u,v in edges]
-            nx.draw_networkx(H, pos=pos, node_size=[(v+1) for v in d.values()], node_color ="#5792ad", edge_color="#CBCBCB", width=weights, with_labels=True, font_size = 0.6, font_color = "black")
+            weights = [H[u][v]['weight']/2 for u,v in edges]
+            nx.draw_networkx(H, pos=pos, node_size=[(v+1)/4 for v in d.values()], node_color ="#e4af7e", edge_color="#CBCBCB", width=weights, with_labels=True, font_size = 0.4, font_color = "#393939")
+
         plt.axis('off')
         plt.show()
 
@@ -129,10 +132,10 @@ class Gui:
     def show_occurence(self):
         occ, deg, nb_musician = self.network.computeoccudeg()
         fig = plt.figure()
-        plt.plot(deg, occ, 'o-')
-        fig.suptitle('Number of node by degree', fontsize=16)
-        plt.xlabel('Degree', fontsize=12)
-        plt.ylabel('Occurence', fontsize=12)
+        plt.plot(deg, occ, '.-',  color='orange')
+        fig.suptitle('Degree distribution', fontsize=12)
+        plt.xlabel('Degree', fontsize=10)
+        plt.ylabel('Occurence', fontsize=10)
         plt.show()
 
 
@@ -156,8 +159,10 @@ class Gui:
     def show_community(self, simple_view = False):
         d = dict(self.network.getdegree())
         fig, ax = plt.subplots(figsize=(10, 6),  dpi=600)
+
         edges = self.network.getgraph().edges()
         partition = community_louvain.best_partition(self.network.getgraph())
+
         pos = nx.spring_layout(self.network.getgraph(), 2/math.sqrt(self.network.getgraph().order())) #k=5/math.sqrt(self.G.order())
         cmap = cm.get_cmap("twilight_shifted", max(partition.values()) + 1)
         # color map pour les edges avec une valeur alpha
@@ -172,9 +177,9 @@ class Gui:
         if(simple_view):
             nx.draw_networkx(self.network.getgraph(), pos=pos, cmap=cmap, node_size=0.1, node_color=list(partition.values()), edge_color="grey", with_labels=False, width=0.05, arrows=False)
         else:
-            nx.draw_networkx(self.network.getgraph(), pos=pos, node_size=[(v+1)*0.001 for v in d.values()], cmap=cmap, node_color=list(partition.values()), width=0.05, edge_color="grey", connectionstyle=f'arc3,rad=0.2', style='solid', arrowstyle='-', with_labels=True, font_size = 0.01, font_color = "white")
+            nx.draw_networkx(self.network.getgraph(), pos=pos, node_size=[(v+1)/4 for v in d.values()], cmap=cmap, node_color=list(partition.values()), width=0.05, edge_color="#dbdbdb", connectionstyle=f'arc3,rad=0.2', style='solid', arrowstyle='-', with_labels=False, font_size = 0.0001, font_color = "#dbdbdb")
         ax.axis('off')
-        fig.set_facecolor('black')
+        fig.set_facecolor('#262626')
         plt.show()
 
 

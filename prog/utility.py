@@ -1,6 +1,7 @@
 import data_parser as p
 from itertools import islice
 import csv
+import unidecode
 
 class Utility:
     def __init__(self):
@@ -33,59 +34,59 @@ class Utility:
         instrument = "unknown"
 
         if(musician_instru.lower() in ["bass", "b", "b.", "contrebasse", "bas", "electric bas", "electric bass", "acoustic bass", "ba", "bs", "double bass", "basse"]):
-            instrument = "bass"
+            instrument = "Bass"
         elif(musician_instru.lower() in ["artist", "lead vo", "all voc", "v", "vocalist", "vox", "choeur", "vocal", "voice", "voc.", "voc", "ld voc", "bk voc", "voca", "vocals", "lead vocals", "lead voc", "vo", "chant", "mc" , "m", "choriste", "backing vocals", "backing vocal", "backvocals", "back voc", "singer", "rap", "lead rap"]):
-            instrument = "vocal"
+            instrument = "Vocal"
         elif(musician_instru.lower() in ["batterie", "d", "drums", "drum", "dru", "dr", "steel dr", "jamaica drums"]):
-            instrument = "drum"
+            instrument = "Drum"
         elif(musician_instru.lower() in ["talking dr", "percu", "timbals", "tim", "bells", "percus", "percussion", "percussi", "percussio", "percussionist", "percussions", "perc.", "per", "perc"]):
-            instrument = "percussion"
+            instrument = "Percussion"
         elif(musician_instru.lower() in ["elg", "cg", "guitar", "gu", "gui", "bjo", "g" ,"g.", "guitare", "guitars", "guit", "guit.", "guita"]):
-            instrument = "guitar"
+            instrument = "Guitar"
         elif(musician_instru.lower() in ["uk"]):
-            instrument = "ukulele"
+            instrument = "Ukulele"
         elif(musician_instru.lower() in ["elp", "piano", "pf", "p.", "pian", "p", "el-p"]):
-            instrument = "piano"
+            instrument = "Piano"
         elif(musician_instru.lower() in ["synth", "keyboards", "keyboard", "key", "keyb", "kb", "claviers", "kbds", "kbd", "ke", "keys", "k", "k."]):
-            instrument = "keyboard"
+            instrument = "Keyboard"
         elif(musician_instru.lower() in ["trombon", "trombone", "trombones", "tb", "trumbone", "1st trombone", "2nd trombone"]):
-            instrument = "trombon"
+            instrument = "Trombon"
         elif(musician_instru.lower() in ["vl", "vn", "violin", "violon", "viola", "1st violin", "2nd violin", "1st violi", "2nd violi", "vln", "alto violin", "fiddle"]):
-            instrument = "violin"
+            instrument = "Violin"
         elif(musician_instru.lower() in ["vc", "cello", "cell"]):
-            instrument = "cello"
+            instrument = "Cello"
         elif(musician_instru.lower() in ["tuba"]):
-            instrument = "tuba"
+            instrument = "Tuba"
         elif(musician_instru.lower() in ["flut", "flute", "fl", "pc"]):
-            instrument = "flut"
+            instrument = "Flut"
         elif(musician_instru.lower() in ["french horn", "frh", "horn", "horns", "frenchh"]):
-            instrument = "french horn"
+            instrument = "French Horn"
         elif(musician_instru.lower() in ["clarinet", "oboe", "o", "cl", "fg", "faggoto", "ob"]):
-            instrument = "clarinet"
+            instrument = "Clarinet"
         elif(musician_instru.lower() in ["bassoon"]):
-            instrument = "bassoon"
+            instrument = "Bassoon"
         elif(musician_instru.lower() in ["organ", "hammond organ", "or"]):
-            instrument = "organ"
+            instrument = "Organ"
         elif(musician_instru.lower() in ["tub", "tuba"]):
-            instrument = "tuba"
+            instrument = "Tuba"
         elif(musician_instru.lower() in ["trumpet", "tr", "tr.", "trumpe", "t", "tp", "tp."]):
-            instrument = "trumpet"
+            instrument = "Trumpet"
         elif(musician_instru.lower() in ["s", "s.", "ss", "ss.", "ts", "ts.", "as", "as.", "bs", "bs.", "sax", "saxe", "saxes", "saxophone", "saxophon", "sa", "saxo", "baritone sax", "tenor sax", "tenor sa", "alto sax", "tenor saxophone", "baritone saxophone", "bar"]):
-            instrument = "saxophone"
+            instrument = "Saxophone"
         elif(musician_instru.lower() in ["hca", "hc","harmonica", "harmonic"]):
-            instrument = "harmonica"
+            instrument = "Harmonica"
         elif(musician_instru.lower() in ["bandoneon"]):
-            instrument = "bandoneon"
+            instrument = "Bandoneon"
         elif(musician_instru.lower() in ["accordio", "accordion", "pac",  "acc.", "acc"]):
-            instrument = "accordion"
+            instrument = "Accordion"
         elif(musician_instru.lower() in ["n'goni"]):
-            instrument = "n'goni"
+            instrument = "N'goni"
         elif(musician_instru.lower() in ["dj", "sampler", "turntab", "turntabl", "turntables", "tabl", "turntable", "laptop/ad", "laptop"]):
-            instrument = "dj/laptop"
+            instrument = "DJ"
         elif(musician_instru.lower() in ["conductor", "cond"]):
-            instrument = "conductor"
+            instrument = "Conductor"
         elif(musician_instru.lower() in ["harp"]):
-            instrument = "harp"
+            instrument = "Harp"
         """
         else:
             if(musician_instru.lower() != "" and musician_instru.lower() != "unknown"):
@@ -112,6 +113,56 @@ class Utility:
         for key in dic_mus_year_collab:
             new_dict_mus_collab[key] = dic_mus_collab[key]
         return new_dict_mus_collab, dic_mus_year_collab
+
+    # Special function for the neworlean dataset
+    # convert the raw data get from the website (comma)
+    # to data set in the format use in this project (semicolon)
+    def csv_comma_to_semicolon(self, csv_input, csv_output):
+        # Band name, Year, Musicians
+        file = open(csv_input, "r")
+        file_out = open(csv_output, 'w')
+        spamWriter = csv.writer(file_out, delimiter=';', quoting=csv.QUOTE_MINIMAL)
+
+        for line in file:
+            tmp_lst=[]
+            lsttmp = line.split(",")
+            endline = False
+            lst_musician = []
+            # For each
+            if(len(lsttmp) != 1): # Avoid empty data
+                for elem in lsttmp:
+                    if(self.is_date(elem)):
+                        year = elem.split("-")[0]
+                        endline = True
+                    else:
+                        if(endline == False):
+                            lst_musician.append(elem)
+                        else:
+                            break
+            if(len(lst_musician)> 0):
+                str_musician = ""
+                # handle AND,FEAT case to add to the list
+                # filter name
+                for i in range(0,len(lst_musician)):
+                    if(i < len(lst_musician)-1):
+                        str_musician += lst_musician[i] + ","
+                    else:
+                        str_musician += lst_musician[i]
+
+
+                title = lst_musician[0].upper()
+                tmp_lst.append(title)  # Alb name
+                tmp_lst.insert(1, year)
+                tmp_lst.insert(2, "label")
+                tmp_lst.insert(3, str_musician)
+                spamWriter.writerow(tmp_lst)
+
+
+    def is_date(self, string, fuzzy=False):
+        if(string.count("-")==2):
+            return True
+        else:
+            return False
 
     # Create a database with all the informations on a musician
     def create_csv_musician(self, network, name, tophub = False, n = None):
