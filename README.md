@@ -15,7 +15,7 @@ musicians within a collaborative network ?**
 
 ## Screenshot
 ### Album network
-![alt text](https://raw.githubusercontent.com/jbaudru/MasterThesis-JazzNetwork/main/data/pictures/gephi_net_album6.png)
+![alt text](https://github.com/jbaudru/MasterThesis-JazzNetwork/blob/main/data/pictures/gephi_net_album_6.png?raw=true)
 
 ### Live performance network
-![alt text](https://raw.githubusercontent.com/jbaudru/MasterThesis-JazzNetwork/main/data/pictures/gephi_net_montreux.png)
+![alt text](https://github.com/jbaudru/MasterThesis-JazzNetwork/blob/main/data/pictures/gephi_net_montreux.png?raw=true)
