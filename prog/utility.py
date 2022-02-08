@@ -162,7 +162,7 @@ class Utility:
                         if(self.apply_filter(str_musician, filter)):
                             str_musician += lst_musician[i]
                             str_musician = self.clean_data(str_musician)
-                
+
                 title = lst_musician[0].upper()
                 tmp_lst.append(title)  # Alb name
                 tmp_lst.insert(1, year)

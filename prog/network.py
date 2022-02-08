@@ -24,6 +24,10 @@ class Network:
     def clear(self):
         self.G.clear()
 
+    def export(self, name):
+        nam = "../data/" + name + ".gexf"
+        nx.write_gexf(self.G, nam)
+
     def addnode(self, name):
         self.G.add_node(name)
         if(self.isDyn):
@@ -92,7 +96,9 @@ class Network:
                     musician_name = self.uti.clean_musician_name_unicode(musician_name)
                     if("(" not in musician_name and ")" not in musician_name):
                         self.addnode(musician_name)
-
+                        #nx.set_node_attributes(G, bb, "betweenness")
+                        nx.set_node_attributes(self.G, {musician_name: musician_name}, name="name")
+                        nx.set_node_attributes(self.G, {musician_name: musician_instru}, name="instrument")
 
     def create_edge_instru(self, dic, pds):
         for keyinstru in dic:
@@ -113,9 +119,10 @@ class Network:
         return dic_pds_edge
 
 
-    def create_edge(self,dic_alb_musician, dict_pds):
+    def create_edge(self, dic_alb_musician, dict_pds, dic_mus_year_collab):
         dic_instru_mus = {}
         for k in dic_alb_musician:
+            year = dic_mus_year_collab[k]
             for musician in dic_alb_musician[k]:
                 for musician2 in dic_alb_musician[k]:
                     if(musician != musician2):
@@ -127,6 +134,8 @@ class Network:
                                 musician2_name = self.uti.clean_musician_name_unicode(musician2_name)
                                 if("(" not in musician_name and ")" not in musician_name and "(" not in musician2_name and ")" not in musician2_name):
                                     self.addedgeweight(musician_name, musician2_name, dict_pds[musician][musician2])
+                                    nx.set_edge_attributes(self.G, {(musician_name, musician2_name): {"year": year}})
+
                                     instrument = self.uti.filter_instrument(musician_instru)
                                     instrument2 = self.uti.filter_instrument(musician2_instru)
                                     # add to dico instrument

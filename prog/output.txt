@@ -49,3 +49,34 @@ Johnny Griffin  :  60
 Johnny Hodges  :  74
 Duke Ellington  :  154
 ==========================================
+
+# OUTPUT : FESTIVAL NEW ORLEAN
+==========================================
+Clustering coefficient :  0.10896141547702697
+Transitivity value :  0.31707198443579765
+Number of community :  7513
+Total number of nodes :  11319
+Average degree :  15.0
+==========================================
+List of most connected nodes and their degree :
+Barbara Shorts  :  16
+Thais Clark  :  16
+Arpa  :  16
+Nine Times Ladies  :  16
+New Look  :  16
+Big Steppers  :  16
+Ole  :  16
+Gents  :  16
+Henry Gray  :  17
+Cyril Neville  :  17
+Single Men  :  17
+Oliver Morgan  :  18
+Divine Ladies  :  18
+Westbank Steppers  :  18
+George Porter  :  19
+Pleasure Club  :  23
+Undefeated Divas  :  24
+Dr. Michael White  :  25
+Pleasure Clubs  :  51
+Friends  :  62
+==========================================

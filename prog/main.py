@@ -5,17 +5,17 @@ import tophubstat as ths
 
 
 def main():
-    
+    """
     uti = util.Utility()
     lst_data_set = "../data/neworleans_heritage/neworlean.csv"
     uti.csv_comma_to_semicolon(lst_data_set, "../data/dataset_neworlean.csv")
-
+    """
     G = n.Network()
     uti = util.Utility()
 
-    #lst_data_set = "../data/dataset_album_wikipedia.csv"
-    lst_data_set = "../data/dataset_live_montreux.csv"
-    lst_data_set = "../data/dataset_neworlean.csv"
+    lst_data_set = "../data/dataset_album_wikipedia.csv"
+    #lst_data_set = "../data/dataset_live_montreux.csv"
+    #lst_data_set = "../data/dataset_neworlean.csv"
 
     print('1 - Creating datastructure')
     dic_mus_collab, dic_mus_year_collab = uti.get_dic_from_datasets(lst_data_set)
@@ -30,19 +30,19 @@ def main():
 
     print('3 - Building weighted edges.')
     pds = G.comput_weight(dic_mus_collab)
-    dic_instru_mus = G.create_edge(dic_mus_collab, pds)
+    dic_instru_mus = G.create_edge(dic_mus_collab, pds, dic_mus_year_collab)
 
     #G.create_dynamic_edge(dic_mus_collab, G, dic_mus_year_collab)
 
     print("4 - Cleaning memory")
     dic_mus_collab.clear()
     pds.clear()
-    #G.clear()
 
     print('5 - Drawing.')
     interface = ui.Gui(G)
     #interface.show_network(False, False)
     interface.show_info(20, False, False)
+    G.export("NET-Wikipedia")
     #interface.show_community(False)
     #interface.show_occurence()
 
