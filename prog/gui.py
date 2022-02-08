@@ -12,7 +12,6 @@ from itertools import islice
 
 import math
 
-import network as n
 import video as vid
 
 class Gui:
@@ -20,7 +19,7 @@ class Gui:
         self.network = graph
 
     def show_info(self, num_of_node_to_prt = 10, in_q1_q2 = False, neighbors = False):
-        occ, deg, nb_musician = self.network.computeoccudeg()
+        _, deg, nb_musician = self.network.computeoccudeg()
         d = dict(self.network.getdegree())
         print('==========================================')
         print("Clustering coefficient : ", nx.average_clustering(nx.Graph(self.network.getgraph())))
@@ -29,7 +28,7 @@ class Gui:
         print("Number of community : ", max(partition.values())+1)
         print("Total number of nodes : ", nb_musician)
         print("Average degree : ", sum(deg)/len(deg))
-        max_key = []; max_value = []
+        max_value = []
         d = {k: v for k, v in sorted(d.items(), key=lambda item: item[1])} # Sort dict in order way
         if(in_q1_q2):
             print('==========================================')
@@ -58,7 +57,7 @@ class Gui:
         H = nx.Graph(self.network.getgraph())
         edges = H.edges()
         if(instru):
-            fig, ax = plt.subplots(figsize=(10, 10),  dpi=600)
+            fig, _= plt.subplots(figsize=(10, 10),  dpi=600)
             color_lookup = {k:v for v, k in enumerate(sorted(set(H.nodes())))}
             low, *_, high = sorted(color_lookup.values())
             norm = colors.Normalize(vmin=low, vmax=high, clip=True)
@@ -94,7 +93,7 @@ class Gui:
             dict_pk[deg] = dict_occ_deg[deg] / nb_musician
             lst_deg.append(deg)
             lst_pk.append(dict_pk[deg])
-        fig = plt.figure()
+        #fig = plt.figure()
         plt.plot(lst_deg, lst_pk, '.')
         plt.xlabel('k', fontsize=12)
         plt.ylabel('P(k)', fontsize=12)
@@ -160,7 +159,7 @@ class Gui:
         d = dict(self.network.getdegree())
         fig, ax = plt.subplots(figsize=(10, 6),  dpi=600)
 
-        edges = self.network.getgraph().edges()
+        #edges = self.network.getgraph().edges()
         partition = community_louvain.best_partition(self.network.getgraph())
 
         pos = nx.spring_layout(self.network.getgraph(), 2/math.sqrt(self.network.getgraph().order())) #k=5/math.sqrt(self.G.order())
@@ -193,8 +192,8 @@ class Gui:
         start = lst_year[0]
 
         lst_nodes = self.network.getdyngraph().nodes() #get all node (a modifier si marche pas)
-        final_lst_deg = dict(self.network.getgraph().degree)
-        lst_deg = {}
+        #final_lst_deg = dict(self.network.getgraph().degree)
+        #lst_deg = {}
 
         pa_all_time = list(nx.preferential_attachment(self.network.getdyngraph()))
         max_pa = 0
@@ -216,9 +215,9 @@ class Gui:
                 s = self.network.getdyngraph().time_slice(t_from= int(start), t_to= int(lst_year[j]))
                 lst_nodes = self.network.getdyngraph().nodes(t=int(lst_year[j]))
 
-                cur_dict_deg = dn.degree(self.network.getdyngraph(), lst_nodes, t=int(lst_year[j]))
+                #cur_dict_deg = dn.degree(self.network.getdyngraph(), lst_nodes, t=int(lst_year[j]))
 
-                lst_nodes_s = s.nodes()
+                #lst_nodes_s = s.nodes()
                 cur_dict_deg_s = dn.degree(s)
 
 
