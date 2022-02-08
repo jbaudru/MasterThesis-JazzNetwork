@@ -1,6 +1,6 @@
-#MasterThesis-JazzNetwork
+# MasterThesis-JazzNetwork
 
-##Introduction
+## Introduction
 
 There are many systems that take the form of networks, i.e. a set of nodes connected to each other by edges.
 Among the systems most commonly studied in the literature, we find, among others, the network of hypertext
@@ -10,11 +10,11 @@ or the networks related to biology.
 This document (*and this code*) aims to answer the following question : **What are the parameters favouring the preferential attachment among jazz
 musicians within a collaborative network ?**
 
-##Requirements
+## Requirements
 `pip install networkx requests panda csv re unidecode BeautifulSoup scipy numpy itertools matplotlib powerlaw dynetx csv cv2 glob nltk`
 
 
-##Screenshot
+## Screenshot
 
 ![alt text](https://raw.githubusercontent.com/jbaudru/MasterThesis-JazzNetwork/main/data/pictures/community.png)
 
