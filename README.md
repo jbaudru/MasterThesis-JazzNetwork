@@ -1,7 +1,6 @@
 # MasterThesis-JazzNetwork
 
 ## Introduction
-
 There are many systems that take the form of networks, i.e. a set of nodes connected to each other by edges.
 Among the systems most commonly studied in the literature, we find, among others, the network of hypertext
 links on the *World Wide Web*, the network of scientific citation, the network of roads between cities in a country
@@ -15,7 +14,8 @@ musicians within a collaborative network ?**
 
 
 ## Screenshot
+### Album network
+![alt text](https://raw.githubusercontent.com/jbaudru/MasterThesis-JazzNetwork/main/data/pictures/gephi_net_album6.png)
 
-![alt text](https://raw.githubusercontent.com/jbaudru/MasterThesis-JazzNetwork/main/data/pictures/community.png)
-
-![alt text](https://raw.githubusercontent.com/jbaudru/MasterThesis-JazzNetwork/main/data/pictures/instrument_connection.png)
+### Live performance network
+![alt text](https://raw.githubusercontent.com/jbaudru/MasterThesis-JazzNetwork/main/data/pictures/gephi_net_montreux.png)
