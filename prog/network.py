@@ -11,6 +11,8 @@ import powerlaw
 
 class Network:
     def __init__(self, isDigraph = False, isDyna = False):
+        self.isDigraph = isDigraph
+        self.isDyna = isDyna
         if(isDigraph):
             self.G = nx.MultiGraph()
         else:
@@ -26,7 +28,10 @@ class Network:
 
     def export(self, name):
         nam = "../data/" + name + ".gexf"
-        nx.write_gexf(self.G, nam)
+        if(not self.isDyna):
+            nx.write_gexf(self.G, nam)
+        else:
+            dn.write_gexf(self.G, nam)
 
     def addnode(self, name):
         self.G.add_node(name)

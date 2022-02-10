@@ -10,7 +10,7 @@ def main():
     lst_data_set = "../data/neworleans_heritage/neworlean.csv"
     uti.csv_comma_to_semicolon(lst_data_set, "../data/dataset_neworlean.csv")
     """
-    G = n.Network()
+    G = n.Network(False, False)
     uti = util.Utility()
 
     lst_data_set = "../data/dataset_album_wikipedia.csv"
