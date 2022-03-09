@@ -139,6 +139,8 @@ class Network:
                                 musician2_name = self.uti.clean_musician_name_unicode(musician2_name)
                                 if("(" not in musician_name and ")" not in musician_name and "(" not in musician2_name and ")" not in musician2_name):
                                     self.addedgeweight(musician_name, musician2_name, dict_pds[musician][musician2])
+                                    if(not year.isnumeric()):
+                                        year = ""
                                     nx.set_edge_attributes(self.G, {(musician_name, musician2_name): {"year": year}})
 
                                     instrument = self.uti.filter_instrument(musician_instru)

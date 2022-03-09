@@ -12,6 +12,7 @@ from itertools import islice
 
 import math
 
+import tophubstat as ths
 import video as vid
 
 class Gui:
@@ -26,8 +27,11 @@ class Gui:
         print("Transitivity value : ", nx.transitivity(nx.Graph(self.network.getgraph())))
         partition = community_louvain.best_partition(nx.Graph(self.network.getgraph()))
         print("Number of community : ", max(partition.values())+1)
+        print("Modularity : ", community_louvain.modularity(partition, self.network.getgraph()))
         print("Total number of nodes : ", nb_musician)
         print("Average degree : ", sum(deg)/len(deg))
+        print("Max. degree : ", max(deg))
+        print("Min. degree : ", min(deg))
         max_value = []
         d = {k: v for k, v in sorted(d.items(), key=lambda item: item[1])} # Sort dict in order way
         if(in_q1_q2):
@@ -112,7 +116,9 @@ class Gui:
 
 
     def show_rich_club_distrib(self):
-        rc = nx.rich_club_coefficient(self.network.getgraph(), normalized=True, Q=100)
+        G = self.network.getgraph()
+        G.remove_edges_from(nx.selfloop_edges(G))
+        rc = nx.rich_club_coefficient(G, normalized=False, Q=100)
         lst_deg = []; lst_rc_coef = []
         total_rc = 0
         for deg in rc:
@@ -121,11 +127,25 @@ class Gui:
             total_rc += rc[deg]
         print("Average rich-club coef : ", total_rc/len(rc))
         fig = plt.figure()
-        plt.plot(lst_deg, lst_rc_coef, 'o-')
+        plt.plot(lst_deg, lst_rc_coef, '-', color='orange')
         fig.suptitle('Rich-club coefficient by degree', fontsize=16)
         plt.xlabel('Degree', fontsize=12)
         plt.ylabel('Rich-club coefficient', fontsize=12)
         plt.show()
+
+    def show_num_of_mus_by_perf(self, dic_mus_collab):
+        nb_mus_by_perf = 0
+        lst_num_musi = []
+        lst_alb_name = []
+        for elem in dic_mus_collab:
+            lst_num_musi.append(len(dic_mus_collab[elem]))
+            lst_alb_name.append(elem)
+            nb_mus_by_perf += len(dic_mus_collab[elem])
+        print("Total : ", nb_mus_by_perf)
+        print("Avg. num of mus. by perf : ", nb_mus_by_perf/len(dic_mus_collab))
+
+        bargraph = ths.TopHubStat()
+        bargraph.show_data("Title", "Num. musicians", lst_alb_name,  lst_num_musi)
 
 
     def show_occurence(self):
@@ -157,7 +177,7 @@ class Gui:
 
     def show_community(self, simple_view = False):
         d = dict(self.network.getdegree())
-        fig, ax = plt.subplots(figsize=(10, 6),  dpi=600)
+        fig, ax = plt.subplots(figsize=(6, 6),  dpi=600)
 
         #edges = self.network.getgraph().edges()
         partition = community_louvain.best_partition(self.network.getgraph())

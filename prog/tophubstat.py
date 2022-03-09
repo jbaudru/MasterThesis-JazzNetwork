@@ -4,7 +4,7 @@ import matplotlib.cm as cm
 import numpy as np
 
 class TopHubStat:
-    def __init__(self, path):
+    def __init__(self, path=None):
         self.path = path
 
     def getdictCity(self):
@@ -25,17 +25,37 @@ class TopHubStat:
     def showCity(self):
         dict_label_occ = self.count_data(self.getdictCity())
         lst_x, lst_y = self.dict_to_lst(dict_label_occ)
+        ind_to_del = lst_x.index("\n")
+        lst_x.pop(ind_to_del)
+        lst_y.pop(ind_to_del)
         self.show_data("City","Count", lst_x, lst_y)
 
     def showSex(self):
         dict_label_occ = self.count_data(self.getdictSex())
         lst_x, lst_y = self.dict_to_lst(dict_label_occ)
+        lst_x = ["Male"]
         self.show_data("Sex","Count", lst_x, lst_y)
 
     def showCountry(self):
         dict_label_occ = self.count_data(self.getdictCountry())
         lst_x, lst_y = self.dict_to_lst(dict_label_occ)
-        self.show_data("Country","Count", lst_x, lst_y)
+        nw_lst_x = []
+        for country in lst_x:
+            if(country == "Allemagne"):
+                nw_lst_x.append("Germany")
+            elif(country == "Suède"):
+                nw_lst_x.append("Sweden")
+            elif(country == "Jamaique"):
+                nw_lst_x.append("Jamaica")
+            elif(country == "Belgique"):
+                nw_lst_x.append("Belgium")
+            elif(country == "Suisse"):
+                nw_lst_x.append("Switzerland")
+            elif(country == "Angleterre"):
+                nw_lst_x.append("England")
+            else:
+                nw_lst_x.append(country)
+        self.show_data("Country","Count", nw_lst_x, lst_y)
 
     def showInstru(self):
         dict_label_occ = self.count_data(self.getdictInstru())
@@ -71,11 +91,12 @@ class TopHubStat:
 
 
     def show_data(self, x_label, y_label, lst_x, lst_y):
-        fig = plt.figure()
+        #fig = plt.figure()
+
 
         colors =  plt.cm.tab20c( (4./3*np.arange(20*3/4)).astype(int) )
-        colors = colors.tolist()[:len(lst_y)]
-
+        colors = colors.tolist()[:len(lst_y)][::-1]
+        """
         nw_col = []
         for i in range(0, len(colors)):
             tuple = (colors[i][0], colors[i][1], colors[i][2], colors[i][3])
@@ -88,9 +109,17 @@ class TopHubStat:
         plt.barh(lst_x, lst_y, color=colors)
         plt.xlabel(y_label, fontsize=10)
         plt.ylabel(x_label, fontsize=10)
-        plt.yticks(fontsize=7)
+        plt.yticks(fontsize=5)
         #fig.savefig('top_hub_stat.png')
+        """
+        #explode = (0, 0.1, 0, 0)  # only "explode" the 2nd slice (i.e. 'Hogs')
+        explode = [0 for i in range(0,len(lst_y))]
+        fig1, ax1 = plt.subplots()
+        wedges, texts, autotexts = ax1.pie(lst_y, explode=explode, labels=lst_x, colors=colors, autopct='%1.1f%%', pctdistance=0.8, rotatelabels=True, labeldistance=1, textprops=dict(color="black", size=8), shadow=False, startangle=90)
+        ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+        #ax1.legend(wedges, lst_x, title=x_label, loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
         plt.show()
+
 
     def parse_data(self, index):
         file = open(self.path, "r")

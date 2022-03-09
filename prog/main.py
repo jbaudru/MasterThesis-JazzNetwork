@@ -28,23 +28,31 @@ def main():
     #print('2.2 - Creating musicians data sets.')
     #G.create_csv_musician()
 
-    print('3 - Building weighted edges.')
+    print('3.1 - Computing weight of edges.')
     pds = G.comput_weight(dic_mus_collab)
+    print('3.2 - Building weighted edges.')
     dic_instru_mus = G.create_edge(dic_mus_collab, pds, dic_mus_year_collab)
 
     #G.create_dynamic_edge(dic_mus_collab, G, dic_mus_year_collab)
 
+    """
     print("4 - Cleaning memory")
     dic_mus_collab.clear()
     pds.clear()
+    """
 
     print('5 - Drawing.')
     interface = ui.Gui(G)
-    #interface.show_network(False, False)
-    interface.show_info(20, False, False)
-    G.export("NET-Wikipedia")
-    #interface.show_community(False)
+    interface.show_network(False, False)
+    #interface.show_info(10, False, False)
+    #interface.show_distrib_pk()
+    #interface.show_rich_club_distrib()
+    #G.export("NET-Montreux_year")
+    #interface.show_community(True)
     #interface.show_occurence()
+
+    #TODO : Review the plot, plot bar
+    #interface.show_num_of_mus_by_perf(dic_mus_collab)
 
     """
     H = n.Network(True)
@@ -56,14 +64,18 @@ def main():
     interface.show_network(True, True)
     """
 
-    """
+
     #uti.create_csv_musician(G, "top_hub_montreux", True, 100)
-    tophubstat = ths.TopHubStat("../data/top_hub_montreux.csv")
+    #tophubstat = ths.TopHubStat("../data/top_hub_montreux.csv")
     #tophubstat = ths.TopHubStat("../data/top_hub_wiki.csv")
-    tophubstat.getdictInstru()
-    tophubstat.showInstru()
+    #tophubstat.getdictInstru()
+    #tophubstat.showInstru()
+    #tophubstat.showCity()
+    #tophubstat.showSex()
+    #tophubstat.showYear()
+    #tophubstat.showCountry()
 
-
+    """
     interface = ui.Gui(G)
     interface.show_network(False, False)
     #interface.show_community(False)
