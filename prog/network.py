@@ -23,6 +23,14 @@ class Network:
         self.uti = uti.Utility()
         self.isDyn = isDyna
 
+        self.filter =  self.uti.txt_to_lst("../data/filter_words.txt")
+        tmp_lst =  self.uti.txt_to_lst("../data/filter_producers.txt")
+        self.filter.extend(tmp_lst)
+        tmp_lst =  self.uti.txt_to_lst("../data/filter_writers.txt")
+        self.filter.extend(tmp_lst)
+        tmp_lst = self.uti.txt_to_lst("../data/filter_labels.txt")
+        self.filter.extend(tmp_lst)
+
     def clear(self):
         self.G.clear()
 
@@ -34,19 +42,22 @@ class Network:
             dn.write_gexf(self.G, nam)
 
     def addnode(self, name):
-        self.G.add_node(name)
-        if(self.isDyn):
-            self.G_Dynamic.add_node(name)
-
+        if(name not in self.filter):
+            self.G.add_node(name)
+            if(self.isDyn):
+                self.G_Dynamic.add_node(name)
+                
     def addedge(self, src, dest):
-        self.G.add_edge(src, dest)
+        if(src not in self.filter and dest not in self.filter):
+            self.G.add_edge(src, dest)
 
     def adddynedge(self, src, dest, time):
         if(str(time).isnumeric()): # Avoid case where there is no year in data set
             self.G_Dynamic.add_interaction(src, dest, t=time)
 
     def addedgeweight(self, src, dest, wt):
-        self.G.add_edge(src, dest, weight=wt)
+        if(src not in self.filter and dest not in self.filter):
+            self.G.add_edge(src, dest, weight=wt)
 
     def getnodes(self):
         return self.G.nodes

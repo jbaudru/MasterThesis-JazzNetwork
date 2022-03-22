@@ -11,6 +11,7 @@ from decimal import Decimal
 from itertools import islice
 
 import math
+import gc
 
 import tophubstat as ths
 import video as vid
@@ -202,69 +203,68 @@ class Gui:
         plt.show()
 
 
-    def show_dynamic_network(self, time, draw = False):
-        V = vid.Video()
-        folder = "../data/tmp_vid/"
-
-        pos = nx.kamada_kawai_layout(self.network.getdyngraph())
+    def show_pref_att(self, time, draw = False):
         lst_year = list(time.values())
         lst_year = list(dict.fromkeys(lst_year)) #remove duplicate year
-        start = lst_year[0]
-
-        lst_nodes = self.network.getdyngraph().nodes() #get all node (a modifier si marche pas)
-        #final_lst_deg = dict(self.network.getgraph().degree)
-        #lst_deg = {}
-
-        pa_all_time = list(nx.preferential_attachment(self.network.getdyngraph()))
-        max_pa = 0
-        max_txt = ""
-        for it in range(0, len(pa_all_time)):
-            if(pa_all_time[it][2] > max_pa):
-                max_pa = pa_all_time[it][2]
-                max_txt = pa_all_time[it]
-        print(max_txt)
-
         max_pa_by_year = []
+        avg_pa_by_year = []
+        count_node_by_year = []
         years = []
+        # FOR WIKI NET
+        #lst_year.remove("date")
+        #lst_year.remove("year")
+        lst_year = ['1967', '1968', '1969', '1970', '1971', '1972', '1973', '1974', '1975', '1976', '1977', '1978', '1979', '1980', '1981', '1982', '1983', '1984', '1985', '1986', '1987', '1988', '1989', '1990', '1991', '1992', '1993', '1994', '1995', '1996', '1997', '1998', '1999', '2000', '2001', '2002', '2003', '2004', '2005', '2006', '2007', '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020']
 
-        for j in range(0,len(lst_year)-1):
-            if(lst_year[j] != "year"):
-                plt.figure(figsize=(15,10), dpi=100)
+        for j in range(0,len(lst_year)):
+            if(lst_year[j].isnumeric()):
                 print("Creation network for year : ", lst_year[j])
 
-                s = self.network.getdyngraph().time_slice(t_from= int(start), t_to= int(lst_year[j]))
-                lst_nodes = self.network.getdyngraph().nodes(t=int(lst_year[j]))
-
-                #cur_dict_deg = dn.degree(self.network.getdyngraph(), lst_nodes, t=int(lst_year[j]))
-
-                #lst_nodes_s = s.nodes()
-                cur_dict_deg_s = dn.degree(s)
-
+                s = self.network.getdyngraph().time_slice(t_from= int(lst_year[j]), t_to= int(lst_year[j]))
 
                 pref_att_curr_year = list(nx.preferential_attachment(s))
+
                 max_pa_year = 0
+                sum_pa_year = 0
                 for it in range(0,len(pref_att_curr_year)):
                     if(pref_att_curr_year[it][2] > max_pa_year):
                         max_pa_year = pref_att_curr_year[it][2]
-                print("P.A. score max by year", max_pa_year)
+                    sum_pa_year += pref_att_curr_year[it][2]
+
+                if(len(pref_att_curr_year) != 0):
+                    avg_pa_year = sum_pa_year/len(pref_att_curr_year)
+                else:
+                    avg_pa_year = 0
+                print("     Max P.A. score :", max_pa_year)
+                print("     Avg P.A. score :", avg_pa_year)
+
+                avg_pa_by_year.append(avg_pa_year)
                 max_pa_by_year.append(max_pa_year)
+                count_node_by_year.append(s.number_of_nodes())
                 years.append(lst_year[j])
 
-                if(draw):
-                    ax = plt.gca()
-                    ax.margins(0.1, 0.1)
-                    ax.set_title(lst_year[j])
-                    nx.draw(s, pos, node_size=[v * 2 for v in cur_dict_deg_s.values()], node_color ="#5792ad", edge_color="#bfbfbf", with_labels = True, font_size = 3, font_color = "#212121", ax=ax)
-                    _ = ax.axis('off')
-                    name = str(lst_year[j])+".png"
-                    plt.savefig(folder + name, dpi=100)
-                    #plt.show()
-
-        fig = plt.figure()
-        plt.plot(max_pa_by_year, years, 'o-')
-        fig.suptitle('P.A. max score by year', fontsize=16)
-        plt.xlabel('Degree', fontsize=12)
-        plt.ylabel('Year', fontsize=8)
+        fig = plt.figure(figsize=(15,3), dpi=100)
+        plt.plot(years, max_pa_by_year, '.-',  color='orange', label='Max. P.A. score')
+        plt.ylabel('Score', fontsize=10)
+        plt.xlabel('Years', fontsize=10)
+        plt.xticks(rotation = 45)
+        plt.xticks(fontsize=5)
+        plt.legend()
         plt.show()
-        if(draw):
-            V.create_video_from_imgs(folder, "test")
+
+        fig = plt.figure(figsize=(15,3), dpi=100)
+        plt.plot(years, avg_pa_by_year, '.-',  color="#918aee", label='Avg. P.A. score')
+        plt.ylabel('Score', fontsize=10)
+        plt.xlabel('Years', fontsize=10)
+        plt.xticks(rotation = 45)
+        plt.xticks(fontsize=5)
+        plt.legend()
+        plt.show()
+
+        fig = plt.figure(figsize=(15,3), dpi=100)
+        plt.plot(years, count_node_by_year, '.-',  color="#ee8adf", label='Number of node')
+        plt.ylabel('Count', fontsize=10)
+        plt.xlabel('Years', fontsize=10)
+        plt.xticks(rotation = 45)
+        plt.xticks(fontsize=5)
+        plt.legend()
+        plt.show()

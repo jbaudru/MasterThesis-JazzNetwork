@@ -196,6 +196,7 @@ class Utility:
         file = open(filename, 'r')
         for line in file:
             line = line.replace('\n', '')
+            #line = line + " " # For Montreux
             lst.append(line)
         return lst
 

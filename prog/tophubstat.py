@@ -33,7 +33,7 @@ class TopHubStat:
     def showSex(self):
         dict_label_occ = self.count_data(self.getdictSex())
         lst_x, lst_y = self.dict_to_lst(dict_label_occ)
-        lst_x = ["Male"]
+        #lst_x = ["Male"]
         self.show_data("Sex","Count", lst_x, lst_y)
 
     def showCountry(self):
