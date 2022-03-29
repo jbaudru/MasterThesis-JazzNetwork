@@ -1,0 +1,213 @@
+<?xml version='1.0' encoding='utf-8'?>
+<gexf xmlns="http://www.gexf.net/1.2draft" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.gexf.net/1.2draft http://www.gexf.net/1.2draft/gexf.xsd" version="1.2">
+  <meta lastmodifieddate="2022-03-29">
+    <creator>NetworkX 2.6.3</creator>
+  </meta>
+  <graph defaultedgetype="undirected" mode="static" name="">
+    <attributes mode="static" class="edge">
+      <attribute id="2" title="networkx_key" type="long" />
+    </attributes>
+    <attributes mode="static" class="node">
+      <attribute id="0" title="name" type="string" />
+      <attribute id="1" title="instrument" type="string" />
+    </attributes>
+    <nodes>
+      <node id="USA" label="USA">
+        <attvalues>
+          <attvalue for="0" value="USA" />
+          <attvalue for="1" value="unknown" />
+        </attvalues>
+      </node>
+      <node id="Panama" label="Panama">
+        <attvalues>
+          <attvalue for="0" value="Panama" />
+          <attvalue for="1" value="unknown" />
+        </attvalues>
+      </node>
+      <node id="Suisse" label="Suisse">
+        <attvalues>
+          <attvalue for="0" value="Suisse" />
+          <attvalue for="1" value="unknown" />
+        </attvalues>
+      </node>
+      <node id="Allemagne" label="Allemagne">
+        <attvalues>
+          <attvalue for="0" value="Allemagne" />
+          <attvalue for="1" value="unknown" />
+        </attvalues>
+      </node>
+      <node id="Angleterre" label="Angleterre">
+        <attvalues>
+          <attvalue for="0" value="Angleterre" />
+          <attvalue for="1" value="unknown" />
+        </attvalues>
+      </node>
+      <node id="Benin" label="Benin">
+        <attvalues>
+          <attvalue for="0" value="Benin" />
+          <attvalue for="1" value="unknown" />
+        </attvalues>
+      </node>
+      <node id="Suède" label="Suède">
+        <attvalues>
+          <attvalue for="0" value="Suède" />
+          <attvalue for="1" value="unknown" />
+        </attvalues>
+      </node>
+      <node id="Belgique" label="Belgique">
+        <attvalues>
+          <attvalue for="0" value="Belgique" />
+          <attvalue for="1" value="unknown" />
+        </attvalues>
+      </node>
+      <node id="Jamaique" label="Jamaique">
+        <attvalues>
+          <attvalue for="0" value="Jamaique" />
+          <attvalue for="1" value="unknown" />
+        </attvalues>
+      </node>
+    </nodes>
+    <edges>
+      <edge source="USA" target="Panama" id="0" weight="2">
+        <attvalues>
+          <attvalue for="2" value="0" />
+        </attvalues>
+      </edge>
+      <edge source="USA" target="Panama" id="1" weight="2">
+        <attvalues>
+          <attvalue for="2" value="1" />
+        </attvalues>
+      </edge>
+      <edge source="USA" target="Panama" id="2" weight="2">
+        <attvalues>
+          <attvalue for="2" value="2" />
+        </attvalues>
+      </edge>
+      <edge source="USA" target="Panama" id="3" weight="2">
+        <attvalues>
+          <attvalue for="2" value="3" />
+        </attvalues>
+      </edge>
+      <edge source="USA" target="Suisse" id="4" weight="4">
+        <attvalues>
+          <attvalue for="2" value="0" />
+        </attvalues>
+      </edge>
+      <edge source="USA" target="Suisse" id="5" weight="4">
+        <attvalues>
+          <attvalue for="2" value="1" />
+        </attvalues>
+      </edge>
+      <edge source="USA" target="Suisse" id="6" weight="4">
+        <attvalues>
+          <attvalue for="2" value="2" />
+        </attvalues>
+      </edge>
+      <edge source="USA" target="Suisse" id="7" weight="4">
+        <attvalues>
+          <attvalue for="2" value="3" />
+        </attvalues>
+      </edge>
+      <edge source="USA" target="Suisse" id="8" weight="4">
+        <attvalues>
+          <attvalue for="2" value="4" />
+        </attvalues>
+      </edge>
+      <edge source="USA" target="Suisse" id="9" weight="4">
+        <attvalues>
+          <attvalue for="2" value="5" />
+        </attvalues>
+      </edge>
+      <edge source="USA" target="Suisse" id="10" weight="4">
+        <attvalues>
+          <attvalue for="2" value="6" />
+        </attvalues>
+      </edge>
+      <edge source="USA" target="Suisse" id="11" weight="4">
+        <attvalues>
+          <attvalue for="2" value="7" />
+        </attvalues>
+      </edge>
+      <edge source="USA" target="Allemagne" id="12" weight="1">
+        <attvalues>
+          <attvalue for="2" value="0" />
+        </attvalues>
+      </edge>
+      <edge source="USA" target="Allemagne" id="13" weight="1">
+        <attvalues>
+          <attvalue for="2" value="1" />
+        </attvalues>
+      </edge>
+      <edge source="USA" target="Angleterre" id="14" weight="3">
+        <attvalues>
+          <attvalue for="2" value="0" />
+        </attvalues>
+      </edge>
+      <edge source="USA" target="Angleterre" id="15" weight="3">
+        <attvalues>
+          <attvalue for="2" value="1" />
+        </attvalues>
+      </edge>
+      <edge source="USA" target="Angleterre" id="16" weight="3">
+        <attvalues>
+          <attvalue for="2" value="2" />
+        </attvalues>
+      </edge>
+      <edge source="USA" target="Angleterre" id="17" weight="3">
+        <attvalues>
+          <attvalue for="2" value="3" />
+        </attvalues>
+      </edge>
+      <edge source="USA" target="Angleterre" id="18" weight="3">
+        <attvalues>
+          <attvalue for="2" value="4" />
+        </attvalues>
+      </edge>
+      <edge source="USA" target="Angleterre" id="19" weight="3">
+        <attvalues>
+          <attvalue for="2" value="5" />
+        </attvalues>
+      </edge>
+      <edge source="USA" target="Benin" id="20" weight="1">
+        <attvalues>
+          <attvalue for="2" value="0" />
+        </attvalues>
+      </edge>
+      <edge source="USA" target="Benin" id="21" weight="1">
+        <attvalues>
+          <attvalue for="2" value="1" />
+        </attvalues>
+      </edge>
+      <edge source="USA" target="Suède" id="22" weight="1">
+        <attvalues>
+          <attvalue for="2" value="0" />
+        </attvalues>
+      </edge>
+      <edge source="USA" target="Suède" id="23" weight="1">
+        <attvalues>
+          <attvalue for="2" value="1" />
+        </attvalues>
+      </edge>
+      <edge source="USA" target="Belgique" id="24" weight="1">
+        <attvalues>
+          <attvalue for="2" value="0" />
+        </attvalues>
+      </edge>
+      <edge source="USA" target="Belgique" id="25" weight="1">
+        <attvalues>
+          <attvalue for="2" value="1" />
+        </attvalues>
+      </edge>
+      <edge source="Suisse" target="Angleterre" id="26" weight="1">
+        <attvalues>
+          <attvalue for="2" value="0" />
+        </attvalues>
+      </edge>
+      <edge source="Suisse" target="Angleterre" id="27" weight="1">
+        <attvalues>
+          <attvalue for="2" value="1" />
+        </attvalues>
+      </edge>
+    </edges>
+  </graph>
+</gexf>
