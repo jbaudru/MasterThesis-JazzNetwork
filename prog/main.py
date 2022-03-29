@@ -13,9 +13,12 @@ def main():
     G = n.Network(False, True)
     uti = util.Utility()
 
-    lst_data_set = "../data/dataset_album_wikipedia.csv"
-    #lst_data_set = "../data/dataset_live_montreux.csv"
+    #lst_data_set = "../data/dataset_album_wikipedia.csv"
+    lst_data_set = "../data/dataset_live_montreux.csv"
     #lst_data_set = "../data/dataset_neworlean.csv"
+
+    uti.eval_quality_dataset(lst_data_set)
+
 
     print('1 - Creating datastructure')
     dic_mus_collab, dic_mus_year_collab = uti.get_dic_from_datasets(lst_data_set)
@@ -36,14 +39,14 @@ def main():
     G.create_dynamic_edge(dic_mus_collab, G, dic_mus_year_collab)
 
 
-    print("4 - Cleaning memory")
-    dic_mus_collab.clear()
-    pds.clear()
+    #print("4 - Cleaning memory")
+    #dic_mus_collab.clear()
+    #pds.clear()
 
 
     print('5 - Drawing.')
     interface = ui.Gui(G)
-    interface.show_pref_att(dic_mus_year_collab)
+    #interface.show_pref_att(dic_mus_year_collab)
     #interface.show_network(False, False)
     #interface.show_info(100, False, False)
     #interface.show_distrib_pk()
@@ -55,6 +58,8 @@ def main():
     #TODO : Review the plot, plot bar
     #interface.show_num_of_mus_by_perf(dic_mus_collab)
 
+
+    # META INSTRU
     '''
     H = n.Network(True)
     H.create_node(dic_instru_mus)
@@ -66,7 +71,19 @@ def main():
     interface.show_network(True, True)
     '''
 
+    tophubstat = ths.TopHubStat("../data/top_hub_montreux.csv")
+    dic_mus_country = tophubstat.getdictCountry()
 
+    # META COUNTRY
+    H = n.Network(True)
+    dic_country_country = uti.get_collab_country(dic_mus_country, dic_mus_collab)
+    H.create_node(dic_country_country)
+    pds2 = H.comput_weight_country(dic_country_country)
+    H.create_edge_instru(dic_country_country, pds2)
+    H.export("META_country_Montreux")
+    interface = ui.Gui(H)
+    #interface.show_info(10, False, False)
+    interface.show_network(True, False, True)
     #uti.create_csv_musician(G, "top_hub_montreux", True, 100)
     #tophubstat = ths.TopHubStat("../data/top_hub_montreux.csv")
     #tophubstat = ths.TopHubStat("../data/top_hub_wiki.csv")

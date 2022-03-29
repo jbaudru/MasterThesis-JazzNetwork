@@ -46,7 +46,7 @@ class Network:
             self.G.add_node(name)
             if(self.isDyn):
                 self.G_Dynamic.add_node(name)
-                
+
     def addedge(self, src, dest):
         if(src not in self.filter and dest not in self.filter):
             self.G.add_edge(src, dest)
@@ -107,6 +107,8 @@ class Network:
         dic_instru_mus = {}
         for k in dic_alb_musician:
             for musician in dic_alb_musician[k]:
+                if(type(musician)==list):
+                    musician = musician[0]
                 if(musician != "" and musician != " " and len(musician) > 2):
                     musician_name, musician_instru = self.uti.get_name_and_instru(musician)
                     musician_name = self.uti.clean_musician_name_unicode(musician_name)
@@ -119,6 +121,8 @@ class Network:
     def create_edge_instru(self, dic, pds):
         for keyinstru in dic:
             for instru in dic[keyinstru]:
+                if(type(instru)==list):
+                    instru = instru[0]
                 if(instru != keyinstru):
                     self.addedgeweight(keyinstru, instru, pds[keyinstru][instru])
 
@@ -132,6 +136,18 @@ class Network:
         for instru in dic_mus_instru:
             for inst in dic_mus_instru[instru]:
                 dic_pds_edge[instru][inst] += 1
+        return dic_pds_edge
+
+    def comput_weight_country(self, dic_mus_instru):
+        dic_pds_edge = {}
+        tmp_instru = {}
+        for instru in dic_mus_instru:
+            tmp_instru[instru] = 0
+        for instru in dic_mus_instru:
+            dic_pds_edge[instru] = tmp_instru.copy()
+        for instru in dic_mus_instru:
+            for inst in dic_mus_instru[instru]:
+                dic_pds_edge[instru][inst[0]] += 1
         return dic_pds_edge
 
 

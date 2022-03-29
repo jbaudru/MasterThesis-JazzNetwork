@@ -28,7 +28,6 @@ class Parser:
                     self.dict_alb_musician[lsttmp[0]] = lstmusician
                     self.dict_alb_year[lsttmp[0]] = lsttmp[1]
 
-
     def get_dict_musician_alb(self):
         return self.dict_alb_musician
 

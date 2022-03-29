@@ -1,7 +1,10 @@
 import data_parser as p
 from itertools import islice
 import csv
+import pandas as pd
 import unidecode
+from collections import defaultdict
+import re
 
 class Utility:
     def __init__(self):
@@ -17,6 +20,28 @@ class Utility:
             musician_instru = "unknown"
         return musician_name, musician_instru
 
+    # For meta network of musicien city
+    def get_collab_country(self, dic_mus_country, dic_mus_collab):
+        topmus = list(dic_mus_country.keys())
+        countries = list(dic_mus_country.values())
+        dic_country_country = {}
+
+        for mus in dic_mus_collab:
+            if(mus in topmus): # si le musicien est dans les tops musiciens
+                for collab_mus in dic_mus_collab[mus]:
+                    collab_mus = re.sub("([\(\[]).*?([\)\]])", "\g<1>\g<2>", collab_mus)
+                    collab_mus = re.sub("[\(\[].*?[\)\]]", "", collab_mus)
+                    if(collab_mus in topmus):
+                        country = dic_mus_country[mus]
+                        if(country[0] not in dic_country_country):
+                            dic_country_country[country[0]] = [dic_mus_country[collab_mus]]
+                        else:
+                            dic_country_country[country[0]].append(dic_mus_country[collab_mus])
+                        if(dic_mus_country[collab_mus][0] not in dic_country_country):
+                            dic_country_country[dic_mus_country[collab_mus][0]] = [country]
+                        else:
+                            dic_country_country[dic_mus_country[collab_mus][0]].append(country)
+        return dic_country_country
 
     def clean_musician_name_unicode(self, musician_name):
         if("&amp;" in musician_name):
@@ -105,6 +130,32 @@ class Utility:
         dic_mus_year_collab_tmp = P.get_dict_year()
         dic_mus_year_collab.update(dic_mus_year_collab_tmp)
         return dic_mus_collab, dic_mus_year_collab
+
+    def eval_quality_dataset(self, dataset):
+        df = pd.read_csv(dataset, sep=';')
+        total_cells = len(df)*4
+        count_emptycells = 0
+        for i, row in df.iterrows():
+            if("montreux" in dataset):
+                title = row["AYO "] # Album title
+                date = row["2014"] # Year
+                label =row["label"]
+                artistes = row["Ayo (Chant),Guillaume Poncelet (Claviers),Christopher Thomas (Basse),Charles Haynes (Batterie),Sherrod Barnes (G"]
+            else:
+                title = row["3 IN JAZZ"] # Album title
+                date = row["1965"] # Year
+                label =row["label"]
+                artistes = row["Sonny Rollins,Cielito Lindo,Cliff Friend"]
+            if(date in ["date", ""]):
+                count_emptycells+=1
+            elif(artistes in ["nan", ""]):
+                count_emptycells+=1
+            elif(title in ["nan", ""]):
+                count_emptycells+=1
+
+        count_dupli_cells = len(df) - len(df.duplicated(keep='first'))
+        print("duplicate celles", count_dupli_cells)
+        print("quality score : ",1 - (count_emptycells/total_cells), dataset)
 
     # Sort musician collab dict the same order than musician year dict
     def sort_dict_by_year(self, dic_mus_collab, dic_mus_year_collab):

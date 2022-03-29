@@ -14,7 +14,6 @@ import math
 import gc
 
 import tophubstat as ths
-import video as vid
 
 class Gui:
     def __init__(self, graph):
@@ -53,7 +52,7 @@ class Gui:
                     print(mus, self.networketneighbours(mus)[0:9])
         print('==========================================')
 
-    def show_network(self, make_circular = False, instru = False):
+    def show_network(self, make_circular = False, instru = False, country=False):
         if(make_circular):
             pos = nx.circular_layout(self.network.getgraph())
         else:
@@ -70,6 +69,16 @@ class Gui:
 
             weights = [H[u][v]['weight']/800 for u,v in edges]
             nx.draw_networkx(H, pos=pos, node_size=[(v+1)/200 for v in d.values()], width=weights, node_color=[mapper.to_rgba(i) for i in color_lookup.values()], edge_color="#ffffff", alpha=0.7, with_labels=True, font_size = 2, font_color = "#393939")
+            fig.set_facecolor('#8189A2')
+        elif(country):
+            fig, _= plt.subplots(figsize=(10, 10),  dpi=600)
+            color_lookup = {k:v for v, k in enumerate(sorted(set(H.nodes())))}
+            low, *_, high = sorted(color_lookup.values())
+            norm = colors.Normalize(vmin=low, vmax=high, clip=True)
+            mapper = cm.ScalarMappable(norm=norm, cmap=cm.tab20c) #magma
+
+            weights = [H[u][v]['weight'] for u,v in edges]
+            nx.draw_networkx(H, pos=pos, node_size=[(v+1) for v in d.values()], width=weights, node_color=[mapper.to_rgba(i) for i in color_lookup.values()], edge_color="#ffffff", alpha=0.7, with_labels=True, font_size = 2, font_color = "#393939")
             fig.set_facecolor('#8189A2')
         else:
             weights = [H[u][v]['weight']/2 for u,v in edges]
@@ -213,7 +222,7 @@ class Gui:
         # FOR WIKI NET
         #lst_year.remove("date")
         #lst_year.remove("year")
-        lst_year = ['1967', '1968', '1969', '1970', '1971', '1972', '1973', '1974', '1975', '1976', '1977', '1978', '1979', '1980', '1981', '1982', '1983', '1984', '1985', '1986', '1987', '1988', '1989', '1990', '1991', '1992', '1993', '1994', '1995', '1996', '1997', '1998', '1999', '2000', '2001', '2002', '2003', '2004', '2005', '2006', '2007', '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020']
+        #lst_year = ['1967', '1968', '1969', '1970', '1971', '1972', '1973', '1974', '1975', '1976', '1977', '1978', '1979', '1980', '1981', '1982', '1983', '1984', '1985', '1986', '1987', '1988', '1989', '1990', '1991', '1992', '1993', '1994', '1995', '1996', '1997', '1998', '1999', '2000', '2001', '2002', '2003', '2004', '2005', '2006', '2007', '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020']
 
         for j in range(0,len(lst_year)):
             if(lst_year[j].isnumeric()):
