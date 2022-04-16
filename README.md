@@ -10,8 +10,11 @@ This document (*and this code*) aims to answer the following question : **What a
 musicians within a collaborative network ?**
 
 ## Requirements
-`pip install networkx requests panda csv re unidecode BeautifulSoup scipy numpy itertools matplotlib powerlaw dynetx csv cv2 glob nltk`
+`pip install requirements.txt`
 
+## Run
+Open the main.py file to modify the different function which should be called.
+`python main.py`
 
 ## Screenshot
 ### Album network
