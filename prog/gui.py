@@ -40,52 +40,73 @@ class Gui:
             d_q1_q2 = dict(list(d.items())[len(d)//4:len(d)//2])
             lst_musicien = list(islice(d_q1_q2.items(), num_of_node_to_prt))
             for mus in lst_musicien:
-                print(mus[0], " : ", d_q1_q2[mus[0]])
+                print(mus[0], "(deg = ", d_q1_q2[mus[0]],")")
         else:
             print('==========================================')
             print("List of most connected nodes and their degree :")
             d_top = dict(list(d.items())[-num_of_node_to_prt:])
+            i = num_of_node_to_prt
             for mus in d_top:
                 if(not neighbors):
-                    print(mus, " : ", d_top[mus])
+                    i -= 1
+                    print(str(i)+ ": "+ str(mus)+ " (deg="+ str(d_top[mus])+")")
                 else:
                     print(mus, self.networketneighbours(mus)[0:9])
         print('==========================================')
 
-    def show_network(self, make_circular = False, instru = False, country=False):
+
+    def show_network(self, make_circular = False, instru = False, country=False, year=False):
         if(make_circular):
-            pos = nx.circular_layout(self.network.getgraph())
+            pos = nx.circular_layout(sorted(self.network.getgraph().nodes()))
         else:
             pos = nx.spring_layout(self.network.getgraph(), 2/math.sqrt(self.network.getorder()))
         d = dict(self.network.getdegree())
-        H = nx.Graph(self.network.getgraph())
+        H = nx.Graph()
+        H.add_nodes_from(sorted(self.network.getgraph().nodes(data=True)))
+        H.add_edges_from(self.network.getgraph().edges(data=True))
         edges = H.edges()
         if(instru):
-            fig, _= plt.subplots(figsize=(10, 10),  dpi=600)
+            fig, _= plt.subplots(figsize=(4, 4),  dpi=200)
             color_lookup = {k:v for v, k in enumerate(sorted(set(H.nodes())))}
             low, *_, high = sorted(color_lookup.values())
             norm = colors.Normalize(vmin=low, vmax=high, clip=True)
             mapper = cm.ScalarMappable(norm=norm, cmap=cm.tab20c) #magma
 
-            weights = [H[u][v]['weight']/800 for u,v in edges]
-            nx.draw_networkx(H, pos=pos, node_size=[(v+1)/200 for v in d.values()], width=weights, node_color=[mapper.to_rgba(i) for i in color_lookup.values()], edge_color="#ffffff", alpha=0.7, with_labels=True, font_size = 2, font_color = "#393939")
-            fig.set_facecolor('#8189A2')
+            weights = [H[u][v]['weight']/2000 for u,v in edges]
+            nx.draw_networkx(H, pos=pos, node_size=[(v+1)/100 for v in d.values()], width=weights, node_color=[mapper.to_rgba(i) for i in color_lookup.values()], edge_color="grey", alpha=1, with_labels=True, font_size = 5, font_color = "#393939")
+            #fig.set_facecolor('#8189A2')
         elif(country):
-            fig, _= plt.subplots(figsize=(10, 10),  dpi=600)
+            fig, ax= plt.subplots(figsize=(4, 4),  dpi=200)
             color_lookup = {k:v for v, k in enumerate(sorted(set(H.nodes())))}
             low, *_, high = sorted(color_lookup.values())
             norm = colors.Normalize(vmin=low, vmax=high, clip=True)
             mapper = cm.ScalarMappable(norm=norm, cmap=cm.tab20c) #magma
 
-            weights = [H[u][v]['weight'] for u,v in edges]
-            nx.draw_networkx(H, pos=pos, node_size=[(v+1) for v in d.values()], width=weights, node_color=[mapper.to_rgba(i) for i in color_lookup.values()], edge_color="#ffffff", alpha=0.7, with_labels=True, font_size = 2, font_color = "#393939")
-            fig.set_facecolor('#8189A2')
+            weights = [H[u][v]['weight']/2 for u,v in edges]
+            nx.draw_networkx(H, pos=pos, node_size=[(v+1)*15 for v in d.values()], width=weights, node_color=[mapper.to_rgba(i) for i in color_lookup.values()], edge_color="grey", alpha=1, with_labels=True, font_size = 5, font_color = "#393939")
+            #nx.draw_networkx_labels(H, pos=pos, ax=ax)
+            #ax.set_ylim(tuple(i*1.1 for i in ax.get_ylim()))
+            #fig.set_facecolor('#8189A2')
+        elif(year):
+            fig, ax= plt.subplots(figsize=(4, 4),  dpi=300)
+            color_lookup = {k:v for v, k in enumerate((sorted(H.nodes())))}
+            low, *_, high = sorted(color_lookup.values())
+            norm = colors.Normalize(vmin=low, vmax=high, clip=True)
+            mapper = cm.ScalarMappable(norm=norm, cmap=cm.tab20c) #magma
+            d = dict(sorted(d.items()))
+            weights = [H[u][v]['weight']/80 for u,v in edges]
+            nx.draw_networkx(H, pos=pos, node_size=[(v+1)/40 for v in d.values()], width=weights, node_color=[mapper.to_rgba(i) for i in color_lookup.values()], edge_color="grey", alpha=1, with_labels=True, font_size = 2, font_color = "#393939")
+            #nx.draw_networkx_labels(H, pos=pos, ax=ax)
+            #ax.set_ylim(tuple(i*1.1 for i in ax.get_ylim()))
+            #fig.set_facecolor('#8189A2')
         else:
             weights = [H[u][v]['weight']/2 for u,v in edges]
             nx.draw_networkx(H, pos=pos, node_size=[(v+1)/4 for v in d.values()], node_color ="#e4af7e", edge_color="#CBCBCB", width=weights, with_labels=True, font_size = 0.4, font_color = "#393939")
 
         plt.axis('off')
+        #plt.savefig('net.png')
         plt.show()
+
 
 
     def show_distrib_pk(self):
@@ -138,9 +159,9 @@ class Gui:
         print("Average rich-club coef : ", total_rc/len(rc))
         fig = plt.figure()
         plt.plot(lst_deg, lst_rc_coef, '-', color='orange')
-        fig.suptitle('Rich-club coefficient by degree', fontsize=16)
-        plt.xlabel('Degree', fontsize=12)
-        plt.ylabel('Rich-club coefficient', fontsize=12)
+        fig.suptitle('Rich-club coefficient by degree', fontsize=12)
+        plt.xlabel('Degree', fontsize=10)
+        plt.ylabel('Rich-club coefficient', fontsize=10)
         plt.show()
 
     def show_num_of_mus_by_perf(self, dic_mus_collab):
@@ -172,13 +193,15 @@ class Gui:
         H = nx.Graph(self.network.getgraph())
         gc =  H.subgraph(max(nx.connected_components(H)))
         lcc = nx.clustering(gc)
-        cmap = plt.get_cmap('autumn')
+        cmap = plt.get_cmap('copper')
         norm = plt.Normalize(0, max(lcc.values()))
         node_colors = [cmap(norm(lcc[node])) for node in gc.nodes]
         fig, (ax1, ax2) = plt.subplots(ncols=2, figsize=(12, 4))
-        nx.draw_spring(gc, node_size=5, node_color=node_colors, with_labels=False, ax=ax1, edge_color="#bfbfbf")
+        edges = H.edges()
+        weights = [H[u][v]['weight']/10 for u,v in edges]
+        nx.draw_kamada_kawai(gc, node_size=0.5, node_color=node_colors, with_labels=False, ax=ax1, width=weights, edge_color="#bfbfbf")
         fig.colorbar(ScalarMappable(cmap=cmap, norm=norm), label='Clustering', shrink=0.95, ax=ax1)
-        ax2.hist(lcc.values(), bins=10)
+        ax2.hist(lcc.values(), color="orange", bins=10)
         ax2.set_xlabel('Clustering')
         ax2.set_ylabel('Frequency')
         plt.tight_layout()
@@ -217,19 +240,19 @@ class Gui:
         lst_year = list(dict.fromkeys(lst_year)) #remove duplicate year
         max_pa_by_year = []
         avg_pa_by_year = []
+        pa_by_year = []
+        count = 0
         count_node_by_year = []
         years = []
         # FOR WIKI NET
         #lst_year.remove("date")
         #lst_year.remove("year")
-        #lst_year = ['1967', '1968', '1969', '1970', '1971', '1972', '1973', '1974', '1975', '1976', '1977', '1978', '1979', '1980', '1981', '1982', '1983', '1984', '1985', '1986', '1987', '1988', '1989', '1990', '1991', '1992', '1993', '1994', '1995', '1996', '1997', '1998', '1999', '2000', '2001', '2002', '2003', '2004', '2005', '2006', '2007', '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020']
+        lst_year = ['1967', '1968', '1969', '1970', '1971', '1972', '1973', '1974', '1975', '1976', '1977', '1978', '1979', '1980', '1981', '1982', '1983', '1984', '1985', '1986', '1987', '1988', '1989', '1990', '1991', '1992', '1993', '1994', '1995', '1996', '1997', '1998', '1999', '2000', '2001', '2002', '2003', '2004', '2005', '2006', '2007', '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020']
 
         for j in range(0,len(lst_year)):
             if(lst_year[j].isnumeric()):
-                print("Creation network for year : ", lst_year[j])
-
+                #print("Creation network for year : ", lst_year[j])
                 s = self.network.getdyngraph().time_slice(t_from= int(lst_year[j]), t_to= int(lst_year[j]))
-
                 pref_att_curr_year = list(nx.preferential_attachment(s))
 
                 max_pa_year = 0
@@ -239,17 +262,23 @@ class Gui:
                         max_pa_year = pref_att_curr_year[it][2]
                     sum_pa_year += pref_att_curr_year[it][2]
 
+                    pa_by_year.append(pref_att_curr_year[it][2])
+                    count += 1
+
                 if(len(pref_att_curr_year) != 0):
                     avg_pa_year = sum_pa_year/len(pref_att_curr_year)
                 else:
                     avg_pa_year = 0
-                print("     Max P.A. score :", max_pa_year)
-                print("     Avg P.A. score :", avg_pa_year)
+                #print("     Max P.A. score :", max_pa_year)
+                #print("     Avg P.A. score :", avg_pa_year)
 
                 avg_pa_by_year.append(avg_pa_year)
                 max_pa_by_year.append(max_pa_year)
                 count_node_by_year.append(s.number_of_nodes())
                 years.append(lst_year[j])
+
+        print(count)
+        print("Avg pref att : ", sum(pa_by_year)/count)
 
         fig = plt.figure(figsize=(15,3), dpi=100)
         plt.plot(years, max_pa_by_year, '.-',  color='orange', label='Max. P.A. score')

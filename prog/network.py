@@ -48,7 +48,7 @@ class Network:
                 self.G_Dynamic.add_node(name)
 
     def addedge(self, src, dest):
-        if(src not in self.filter and dest not in self.filter):
+        if(src not in self.filter and dest not in self.filter): #remove for metanetwork
             self.G.add_edge(src, dest)
 
     def adddynedge(self, src, dest, time):
@@ -56,7 +56,7 @@ class Network:
             self.G_Dynamic.add_interaction(src, dest, t=time)
 
     def addedgeweight(self, src, dest, wt):
-        if(src not in self.filter and dest not in self.filter):
+        if(src not in self.filter and dest not in self.filter): #remove for metanetwork
             self.G.add_edge(src, dest, weight=wt)
 
     def getnodes(self):
@@ -109,14 +109,18 @@ class Network:
             for musician in dic_alb_musician[k]:
                 if(type(musician)==list):
                     musician = musician[0]
-                if(musician != "" and musician != " " and len(musician) > 2):
-                    musician_name, musician_instru = self.uti.get_name_and_instru(musician)
-                    musician_name = self.uti.clean_musician_name_unicode(musician_name)
-                    if("(" not in musician_name and ")" not in musician_name):
-                        self.addnode(musician_name)
-                        #nx.set_node_attributes(G, bb, "betweenness")
-                        nx.set_node_attributes(self.G, {musician_name: musician_name}, name="name")
-                        nx.set_node_attributes(self.G, {musician_name: musician_instru}, name="instrument")
+                if(type(musician)==str):
+                    if(musician != "" and musician != " " and len(musician) > 2):
+                        musician_name, musician_instru = self.uti.get_name_and_instru(musician)
+                        musician_name = self.uti.clean_musician_name_unicode(musician_name)
+                        if("(" not in musician_name and ")" not in musician_name):
+                            self.addnode(musician_name)
+                            #nx.set_node_attributes(G, bb, "betweenness")
+                            nx.set_node_attributes(self.G, {musician_name: musician_name}, name="name")
+                            nx.set_node_attributes(self.G, {musician_name: musician_instru}, name="instrument")
+                if(type(musician)==int):
+                    self.addnode(musician)
+                    nx.set_node_attributes(self.G, {musician: musician}, name="name")
 
     def create_edge_instru(self, dic, pds):
         for keyinstru in dic:
@@ -136,18 +140,6 @@ class Network:
         for instru in dic_mus_instru:
             for inst in dic_mus_instru[instru]:
                 dic_pds_edge[instru][inst] += 1
-        return dic_pds_edge
-
-    def comput_weight_country(self, dic_mus_instru):
-        dic_pds_edge = {}
-        tmp_instru = {}
-        for instru in dic_mus_instru:
-            tmp_instru[instru] = 0
-        for instru in dic_mus_instru:
-            dic_pds_edge[instru] = tmp_instru.copy()
-        for instru in dic_mus_instru:
-            for inst in dic_mus_instru[instru]:
-                dic_pds_edge[instru][inst[0]] += 1
         return dic_pds_edge
 
 
@@ -178,6 +170,10 @@ class Network:
                                             dic_instru_mus[instrument] = [instrument2]
                                         else:
                                             dic_instru_mus[instrument].append(instrument2)
+                                        if(instrument2 not in dic_instru_mus):
+                                            dic_instru_mus[instrument2] = [instrument]
+                                        else:
+                                            dic_instru_mus[instrument2].append(instrument)
         return dic_instru_mus
 
 

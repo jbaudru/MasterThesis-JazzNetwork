@@ -20,6 +20,37 @@ class Utility:
             musician_instru = "unknown"
         return musician_name, musician_instru
 
+    def cmpt_avg_number_of_mus_by_alb(self, dic_mus_collab):
+        sum = 0
+        for album in dic_mus_collab:
+            sum+=len(dic_mus_collab[album])
+        print('Avg. num. mus. by album :', sum/len(dic_mus_collab))
+
+    # TODO FINIR
+    # For meta network of muscien year collaboration
+    def get_collab_year(self, dic_mus_collab, dic_mus_year_collab):
+        #print(dic_mus_year_collab)
+        #print(dic_mus_collab)
+        dic_year_year = {}
+        for album in dic_mus_collab:
+            if(dic_mus_year_collab[album] != 'year' and dic_mus_year_collab[album] != 'date' and dic_mus_year_collab[album].isnumeric()):
+                for musician in dic_mus_collab[album]:
+                    for album2 in dic_mus_collab:
+                        if(album != album2):
+                            if(musician in dic_mus_collab[album2]):
+                                year1 = dic_mus_year_collab[album]
+                                year2 = dic_mus_year_collab[album2]
+                                if(year1 != 'year' and year2 != 'year' and year1 != 'date' and year2 != 'date' and year1.isnumeric() and year2.isnumeric()):
+                                    year1 = int(year1)
+                                    year2 = int(year2)
+                                    if(year1 not in dic_year_year):
+                                        dic_year_year[year1] = [year2]
+                                    else:
+                                        dic_year_year[year1].append(year2)
+                        #pass
+                    #print(musician)
+        return dic_year_year
+
     # For meta network of musicien city
     def get_collab_country(self, dic_mus_country, dic_mus_collab):
         topmus = list(dic_mus_country.keys())
@@ -33,15 +64,34 @@ class Utility:
                     collab_mus = re.sub("[\(\[].*?[\)\]]", "", collab_mus)
                     if(collab_mus in topmus):
                         country = dic_mus_country[mus]
-                        if(country[0] not in dic_country_country):
-                            dic_country_country[country[0]] = [dic_mus_country[collab_mus]]
+                        country = self.translateCountry(country)
+                        if(country not in dic_country_country):
+                            dic_country_country[country] = [self.translateCountry(dic_mus_country[collab_mus])]
                         else:
-                            dic_country_country[country[0]].append(dic_mus_country[collab_mus])
-                        if(dic_mus_country[collab_mus][0] not in dic_country_country):
-                            dic_country_country[dic_mus_country[collab_mus][0]] = [country]
+                            dic_country_country[country].append(self.translateCountry(dic_mus_country[collab_mus][0]))
+                        if(self.translateCountry(dic_mus_country[collab_mus][0]) not in dic_country_country):
+                            dic_country_country[self.translateCountry(dic_mus_country[collab_mus][0])] = [country]
                         else:
-                            dic_country_country[dic_mus_country[collab_mus][0]].append(country)
+                            dic_country_country[self.translateCountry(dic_mus_country[collab_mus][0])].append(country)
         return dic_country_country
+
+    def translateCountry(self, country):
+        if(type(country) == list):
+            country = country[0]
+        if(country == "Allemagne"):
+            return "Germany"
+        elif(country == "Suède"):
+            return "Sweden"
+        elif(country == "Jamaique"):
+            return "Jamaica"
+        elif(country == "Belgique"):
+            return "Belgium"
+        elif(country == "Suisse"):
+            return "Switzerland"
+        elif(country == "Angleterre"):
+            return "England"
+        else:
+            return country
 
     def clean_musician_name_unicode(self, musician_name):
         if("&amp;" in musician_name):
@@ -59,65 +109,62 @@ class Utility:
         instrument = "unknown"
 
         if(musician_instru.lower() in ["bass", "b", "b.", "contrebasse", "bas", "electric bas", "electric bass", "acoustic bass", "ba", "bs", "double bass", "basse"]):
-            instrument = "Bass"
+            return "Bass"
         elif(musician_instru.lower() in ["artist", "lead vo", "all voc", "v", "vocalist", "vox", "choeur", "vocal", "voice", "voc.", "voc", "ld voc", "bk voc", "voca", "vocals", "lead vocals", "lead voc", "vo", "chant", "mc" , "m", "choriste", "backing vocals", "backing vocal", "backvocals", "back voc", "singer", "rap", "lead rap"]):
-            instrument = "Vocal"
+            return "Vocal"
         elif(musician_instru.lower() in ["batterie", "d", "drums", "drum", "dru", "dr", "steel dr", "jamaica drums"]):
-            instrument = "Drum"
+            return "Drum"
         elif(musician_instru.lower() in ["talking dr", "percu", "timbals", "tim", "bells", "percus", "percussion", "percussi", "percussio", "percussionist", "percussions", "perc.", "per", "perc"]):
-            instrument = "Percussion"
+            return "Percussion"
         elif(musician_instru.lower() in ["elg", "cg", "guitar", "gu", "gui", "bjo", "g" ,"g.", "guitare", "guitars", "guit", "guit.", "guita"]):
-            instrument = "Guitar"
+            return "Guitar"
         elif(musician_instru.lower() in ["uk"]):
-            instrument = "Ukulele"
+            return "Ukulele"
         elif(musician_instru.lower() in ["elp", "piano", "pf", "p.", "pian", "p", "el-p"]):
-            instrument = "Piano"
+            return "Piano"
         elif(musician_instru.lower() in ["synth", "keyboards", "keyboard", "key", "keyb", "kb", "claviers", "kbds", "kbd", "ke", "keys", "k", "k."]):
-            instrument = "Keyboard"
+            return "Keyboard"
         elif(musician_instru.lower() in ["trombon", "trombone", "trombones", "tb", "trumbone", "1st trombone", "2nd trombone"]):
-            instrument = "Trombon"
+            return "Trombon"
         elif(musician_instru.lower() in ["vl", "vn", "violin", "violon", "viola", "1st violin", "2nd violin", "1st violi", "2nd violi", "vln", "alto violin", "fiddle"]):
-            instrument = "Violin"
+            return "Violin"
         elif(musician_instru.lower() in ["vc", "cello", "cell"]):
-            instrument = "Cello"
+            return "Cello"
         elif(musician_instru.lower() in ["tuba"]):
-            instrument = "Tuba"
+            return "Tuba"
         elif(musician_instru.lower() in ["flut", "flute", "fl", "pc"]):
-            instrument = "Flut"
+            return "Flut"
         elif(musician_instru.lower() in ["french horn", "frh", "horn", "horns", "frenchh"]):
-            instrument = "French Horn"
+            return "French Horn"
         elif(musician_instru.lower() in ["clarinet", "oboe", "o", "cl", "fg", "faggoto", "ob"]):
-            instrument = "Clarinet"
+            return "Clarinet"
         elif(musician_instru.lower() in ["bassoon"]):
-            instrument = "Bassoon"
+            return "Bassoon"
         elif(musician_instru.lower() in ["organ", "hammond organ", "or"]):
-            instrument = "Organ"
+            return "Organ"
         elif(musician_instru.lower() in ["tub", "tuba"]):
-            instrument = "Tuba"
+            return "Tuba"
         elif(musician_instru.lower() in ["trumpet", "tr", "tr.", "trumpe", "t", "tp", "tp."]):
-            instrument = "Trumpet"
+            return "Trumpet"
         elif(musician_instru.lower() in ["s", "s.", "ss", "ss.", "ts", "ts.", "as", "as.", "bs", "bs.", "sax", "saxe", "saxes", "saxophone", "saxophon", "sa", "saxo", "baritone sax", "tenor sax", "tenor sa", "alto sax", "tenor saxophone", "baritone saxophone", "bar"]):
-            instrument = "Saxophone"
+            return "Saxophone"
         elif(musician_instru.lower() in ["hca", "hc","harmonica", "harmonic"]):
-            instrument = "Harmonica"
+            return "Harmonica"
         elif(musician_instru.lower() in ["bandoneon"]):
-            instrument = "Bandoneon"
+            return "Bandoneon"
         elif(musician_instru.lower() in ["accordio", "accordion", "pac",  "acc.", "acc"]):
-            instrument = "Accordion"
+            return "Accordion"
         elif(musician_instru.lower() in ["n'goni"]):
-            instrument = "N'goni"
+            return "N'goni"
         elif(musician_instru.lower() in ["dj", "sampler", "turntab", "turntabl", "turntables", "tabl", "turntable", "laptop/ad", "laptop"]):
-            instrument = "DJ"
+            return "DJ"
         elif(musician_instru.lower() in ["conductor", "cond"]):
-            instrument = "Conductor"
+            return "Conductor"
         elif(musician_instru.lower() in ["harp"]):
-            instrument = "Harp"
-        """
+            return "Harp"
         else:
-            if(musician_instru.lower() != "" and musician_instru.lower() != "unknown"):
-                print(musician_instru.lower())
-        """
-        return instrument
+            return "unknown"
+        #return instrument
 
     # And return 2 dict {album:year} and {album: lst_musician+(instrument)}
     def get_dic_from_datasets(self, dataset):
@@ -141,6 +188,12 @@ class Utility:
                 date = row["2014"] # Year
                 label =row["label"]
                 artistes = row["Ayo (Chant),Guillaume Poncelet (Claviers),Christopher Thomas (Basse),Charles Haynes (Batterie),Sherrod Barnes (G"]
+            elif("orle" in dataset):
+                title = row["REVON REED"] # Album title
+                date = row["1970"] # Year
+                label =row["label"]
+                artistes = row["Revon Reed"]
+
             else:
                 title = row["3 IN JAZZ"] # Album title
                 date = row["1965"] # Year

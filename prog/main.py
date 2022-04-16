@@ -13,8 +13,8 @@ def main():
     G = n.Network(False, True)
     uti = util.Utility()
 
-    #lst_data_set = "../data/dataset_album_wikipedia.csv"
-    lst_data_set = "../data/dataset_live_montreux.csv"
+    lst_data_set = "../data/dataset_album_wikipedia.csv"
+    #lst_data_set = "../data/dataset_live_montreux.csv"
     #lst_data_set = "../data/dataset_neworlean.csv"
 
     uti.eval_quality_dataset(lst_data_set)
@@ -35,8 +35,9 @@ def main():
     pds = G.comput_weight(dic_mus_collab)
     print('3.2 - Building weighted edges.')
     dic_instru_mus = G.create_edge(dic_mus_collab, pds, dic_mus_year_collab)
-    print('3.3 - Building dynamic edges.')
-    G.create_dynamic_edge(dic_mus_collab, G, dic_mus_year_collab)
+
+    #print('3.3 - Building dynamic edges.') # USEFUL FOR PA SCORE
+    #G.create_dynamic_edge(dic_mus_collab, G, dic_mus_year_collab)
 
 
     #print("4 - Cleaning memory")
@@ -46,9 +47,11 @@ def main():
 
     print('5 - Drawing.')
     interface = ui.Gui(G)
+    #uti.cmpt_avg_number_of_mus_by_alb(dic_mus_collab)
     #interface.show_pref_att(dic_mus_year_collab)
-    #interface.show_network(False, False)
-    #interface.show_info(100, False, False)
+    #interface.show_network(False, False, False, False)
+    #interface.show_info(200, False, False)
+    #interface.show_clustering()
     #interface.show_distrib_pk()
     #interface.show_rich_club_distrib()
     #G.export("NET-New-Orleans")
@@ -60,30 +63,53 @@ def main():
 
 
     # META INSTRU
-    '''
+    """
     H = n.Network(True)
     H.create_node(dic_instru_mus)
     pds2 = H.comput_weight_instru(dic_instru_mus)
+    #print(dic_instru_mus["Guitar"])
+    #print(pds2["Guitar"])
     H.create_edge_instru(dic_instru_mus, pds2)
     H.export("META_instru_Montreux")
     interface = ui.Gui(H)
-    interface.show_info(10, False, False)
-    interface.show_network(True, True)
-    '''
+    #interface.show_info(10, False, False)
+    interface.show_network(True, True, False, False)
+
 
     tophubstat = ths.TopHubStat("../data/top_hub_montreux.csv")
     dic_mus_country = tophubstat.getdictCountry()
+    #print(dic_mus_country)
 
     # META COUNTRY
     H = n.Network(True)
     dic_country_country = uti.get_collab_country(dic_mus_country, dic_mus_collab)
+
+    print(dic_country_country)
+
     H.create_node(dic_country_country)
-    pds2 = H.comput_weight_country(dic_country_country)
+    pds2 = H.comput_weight_instru(dic_country_country)
     H.create_edge_instru(dic_country_country, pds2)
     H.export("META_country_Montreux")
     interface = ui.Gui(H)
     #interface.show_info(10, False, False)
-    interface.show_network(True, False, True)
+    interface.show_network(True, False, True, False)
+    """
+
+    # META YEAR
+    H = n.Network(True)
+    dic_year_year = uti.get_collab_year(dic_mus_collab, dic_mus_year_collab)
+
+    dic_year_year = dict(sorted(dic_year_year.items()))
+
+    #print(dic_year_year)
+    H.create_node(dic_year_year)
+    pds2 = H.comput_weight_instru(dic_year_year)
+    H.create_edge_instru(dic_year_year, pds2)
+    H.export("META_year_Wiki")
+    interface = ui.Gui(H)
+    interface.show_network(True, False, False, True)
+    interface.show_info(10, False, False)
+
     #uti.create_csv_musician(G, "top_hub_montreux", True, 100)
     #tophubstat = ths.TopHubStat("../data/top_hub_montreux.csv")
     #tophubstat = ths.TopHubStat("../data/top_hub_wiki.csv")
