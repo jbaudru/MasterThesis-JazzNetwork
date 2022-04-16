@@ -13,7 +13,7 @@ musicians within a collaborative network ?**
 `pip install requirements.txt`
 
 ## Run
-Open the main.py file to modify the different function which should be called.
+Open the main.py file to modify the different function which should be called. <br>
 `python main.py`
 
 ## Screenshot
