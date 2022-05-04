@@ -14,7 +14,7 @@ def main():
     uti = util.Utility()
 
     lst_data_set = "../data/dataset_album_wikipedia.csv"
-    #lst_data_set = "../data/dataset_live_montreux.csv"
+    lst_data_set = "../data/dataset_live_montreux.csv"
     #lst_data_set = "../data/dataset_neworlean.csv"
 
     uti.eval_quality_dataset(lst_data_set)
@@ -36,8 +36,8 @@ def main():
     print('3.2 - Building weighted edges.')
     dic_instru_mus = G.create_edge(dic_mus_collab, pds, dic_mus_year_collab)
 
-    #print('3.3 - Building dynamic edges.') # USEFUL FOR PA SCORE
-    #G.create_dynamic_edge(dic_mus_collab, G, dic_mus_year_collab)
+    print('3.3 - Building dynamic edges.') # USEFUL FOR PA SCORE
+    G.create_dynamic_edge(dic_mus_collab, G, dic_mus_year_collab)
 
 
     #print("4 - Cleaning memory")
@@ -46,11 +46,36 @@ def main():
 
 
     print('5 - Drawing.')
+
+    #G.getScaleFree()
+
+    # Pie graph, all instru Montreux
+    tophubstat = ths.TopHubStat("../data/top_hub_montreux.csv")
+    #print(dic_instru_mus)
+    ins = {}
+    for instru in dic_instru_mus:
+        #print(instru)
+        for inst in dic_instru_mus[instru]:
+            if(inst not in ins):
+                ins[inst] = 1
+            else:
+                ins[inst] += 1
+    print(ins)
+    ins = {k: v for k, v in sorted(ins.items(), key=lambda item: item[1])}
+    lst_x = []; lst_y = []
+    for elem in ins:
+        lst_x.append(elem)
+        lst_y.append(ins[elem])
+    tophubstat.show_data("Instrument","Count", lst_x, lst_y)
+
+
     interface = ui.Gui(G)
+    #interface.show_info(10, False, False)
+
     #uti.cmpt_avg_number_of_mus_by_alb(dic_mus_collab)
     #interface.show_pref_att(dic_mus_year_collab)
     #interface.show_network(False, False, False, False)
-    #interface.show_info(200, False, False)
+
     #interface.show_clustering()
     #interface.show_distrib_pk()
     #interface.show_rich_club_distrib()
@@ -84,7 +109,6 @@ def main():
     H = n.Network(True)
     dic_country_country = uti.get_collab_country(dic_mus_country, dic_mus_collab)
 
-    print(dic_country_country)
 
     H.create_node(dic_country_country)
     pds2 = H.comput_weight_instru(dic_country_country)
@@ -93,7 +117,7 @@ def main():
     interface = ui.Gui(H)
     #interface.show_info(10, False, False)
     interface.show_network(True, False, True, False)
-    """
+
 
     # META YEAR
     H = n.Network(True)
@@ -109,6 +133,7 @@ def main():
     interface = ui.Gui(H)
     interface.show_network(True, False, False, True)
     interface.show_info(10, False, False)
+    """
 
     #uti.create_csv_musician(G, "top_hub_montreux", True, 100)
     #tophubstat = ths.TopHubStat("../data/top_hub_montreux.csv")

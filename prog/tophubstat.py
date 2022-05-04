@@ -115,7 +115,7 @@ class TopHubStat:
         #explode = (0, 0.1, 0, 0)  # only "explode" the 2nd slice (i.e. 'Hogs')
         explode = [0 for i in range(0,len(lst_y))]
         fig1, ax1 = plt.subplots()
-        wedges, texts, autotexts = ax1.pie(lst_y, explode=explode, labels=lst_x, colors=colors, autopct='%1.1f%%', pctdistance=0.8, rotatelabels=True, labeldistance=1, textprops=dict(color="black", size=8), shadow=False, startangle=90)
+        wedges, texts, autotexts = ax1.pie(lst_y, explode=explode, labels=lst_x, colors=colors, autopct='%1.1f%%', pctdistance=0.9, rotatelabels=True, labeldistance=1, textprops=dict(color="black", size=8), shadow=False, startangle=90)
         ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
         #ax1.legend(wedges, lst_x, title=x_label, loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
         plt.show()

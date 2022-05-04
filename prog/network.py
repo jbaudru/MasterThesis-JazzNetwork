@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 
 import powerlaw
+import math
 
 
 class Network:
@@ -58,6 +59,13 @@ class Network:
     def addedgeweight(self, src, dest, wt):
         if(src not in self.filter and dest not in self.filter): #remove for metanetwork
             self.G.add_edge(src, dest, weight=wt)
+
+    def getScaleFree(self):
+        self.G.remove_edges_from(nx.selfloop_edges(self.G))
+        print("Avg. shortest path length :", nx.average_shortest_path_length(self.G, weight=None))
+        print("N :", self.G.number_of_nodes())
+        print("ln(N) :", math.log(self.G.number_of_nodes()))
+        print("ln(ln(N)) :", math.log(math.log(self.G.number_of_nodes())))
 
     def getnodes(self):
         return self.G.nodes

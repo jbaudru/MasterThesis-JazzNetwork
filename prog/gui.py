@@ -23,7 +23,8 @@ class Gui:
         _, deg, nb_musician = self.network.computeoccudeg()
         d = dict(self.network.getdegree())
         print('==========================================')
-        print("Clustering coefficient : ", nx.average_clustering(nx.Graph(self.network.getgraph())))
+        print("Avg. clustering coefficient : ", nx.average_clustering(nx.Graph(self.network.getgraph())))
+        #print("Clustering coefficient : ", nx.generalized_degree(nx.Graph(self.network.getgraph())))
         print("Transitivity value : ", nx.transitivity(nx.Graph(self.network.getgraph())))
         partition = community_louvain.best_partition(nx.Graph(self.network.getgraph()))
         print("Number of community : ", max(partition.values())+1)
@@ -253,7 +254,11 @@ class Gui:
             if(lst_year[j].isnumeric()):
                 #print("Creation network for year : ", lst_year[j])
                 s = self.network.getdyngraph().time_slice(t_from= int(lst_year[j]), t_to= int(lst_year[j]))
+
                 pref_att_curr_year = list(nx.preferential_attachment(s))
+                #pref_att_curr_year = list(nx.adamic_adar_index(s))
+                #pref_att_curr_year = list(nx.resource_allocation_index(s))
+                #pref_att_curr_year = list(nx.jaccard_coefficient(s))
 
                 max_pa_year = 0
                 sum_pa_year = 0
